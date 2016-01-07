@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # plugins
+    'bootstrapform',
     # apps
     'core',
 )
@@ -104,6 +105,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static/bower_components"),
+]
 
 AUTH_USER_MODEL = 'core.Member'
 LOGIN_URL = 'core:login'

@@ -1,21 +1,26 @@
 {% load static %}
+{% load bootstrap %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login in site</title>
+    {% include 'header.html' %}
 </head>
 <body>
-<h1>Login</h1>
-<div>
-    <form method="post" action="{% url 'core:login' %}">
-        {% csrf_token %}
-        {{ login_form }}
-        <button type="submit">Login</button>
-    </form>
+<div class="container">
+    <h1>Login</h1>
+
+    <div>
+        <form method="post" action="{% url 'core:login' %}">
+            {% csrf_token %}
+            {{ login_form | bootstrap }}
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    <p>
+        Don't have an account? <a href="{% url 'core:register' %}">Sign up</a> here!
+    </p>
 </div>
-<p>
-    Don't have an account? <a href="{% url 'core:register' %}">Sign up</a> here!
-</p>
 </body>
 </html>
