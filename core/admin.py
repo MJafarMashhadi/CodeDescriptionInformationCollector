@@ -9,7 +9,11 @@ list(registration)  # apply, python 3 hack
 @admin.register(ProgrammingLanguage)
 class PLAdmin(admin.ModelAdmin):
     list_display = ('name', 'object_oriented', 'functional', 'compiled', 'interpreted')
-
+    fields = (
+        'name',
+        ('object_oriented', 'functional'),
+        ('compiled', 'interpreted')
+    )
 
 @admin.register(UserKnowsPL)
 class UserKnowsPLAdmin(admin.ModelAdmin):
