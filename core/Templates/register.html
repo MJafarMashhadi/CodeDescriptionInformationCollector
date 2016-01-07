@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+<div>
+    <form method="post" action="{% url 'core:register' %}">
+        {% csrf_token %}
+        {{ register_form }}
+        <button type="submit">Register</button>
+    </form>
+</div>
+<p>
+    Already have an account? <a href="{% url 'core:login' %}">Log in</a> here
+</p>
+</body>
+</html>
