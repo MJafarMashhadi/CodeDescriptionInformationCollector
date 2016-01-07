@@ -10,6 +10,9 @@ from .forms import LoginForm, RegistrationForm
 
 
 def login(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('core:home'))
+
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
@@ -27,6 +30,9 @@ def login(request):
 
 
 def register(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('core:home'))
+
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
         if form.is_valid():
@@ -39,5 +45,13 @@ def register(request):
         'register_form': form
     })
 
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect(reverse('core:home'))
+
+
 def home(request):
-    pass
+    return render(request, 'home.html', context={
+
+    })

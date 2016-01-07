@@ -8,5 +8,6 @@ urlpatterns = [
 
     url(r'^auth/login/$', 'core.views.login', name='login'),
     url(r'^auth/register/$', 'core.views.register', name='register'),
+    url(r'^auth/logout/$', 'core.views.logout', name='logout'),
     url(r'^/?$', 'core.views.home', name='home'),
 ]
