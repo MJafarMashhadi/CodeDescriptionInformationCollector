@@ -7,4 +7,6 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^auth/login/$', 'core.views.login', name='login'),
+    url(r'^auth/register/$', 'core.views.register', name='register'),
+    url(r'^/?$', 'core.views.home', name='home'),
 ]
