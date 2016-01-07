@@ -39,25 +39,52 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     """
     email = models.EmailField(_('email address'), blank=True, primary_key=True)
-    name = models.CharField(_('name'), max_length=30, blank=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+
+    academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'),('U', 'Undergraduate')))
+    experience = models.SmallIntegerField(default=0)
+
     is_staff = models.BooleanField(_('staff status'), default=False,
         help_text=_('Designates whether the user can log into this admin site.'))
     is_active = models.BooleanField(_('active'), default=True,
         help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
+    programming_languages = models.ManyToManyField('ProgrammingLanguage', through='UserKnowsPL')
+
     objects = MemberManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'academic_degree', 'experience']
 
     def get_short_name(self):
-        return self.name
+        return self.first_name
 
     def get_full_name(self):
+        return ('%s %s' % (self.first_name, self.last_name)).strip()
+
+
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=40)
+    object_oriented = models.BooleanField()
+    functional = models.BooleanField()
+    compiled = models.BooleanField()
+    interpreted = models.BooleanField()
+
+    def __str__(self):
         return self.name
 
+
+class UserKnowsPL(models.Model):
+    user = models.ForeignKey(Member)
+    language = models.ForeignKey(ProgrammingLanguage)
+    proficiency = models.SmallIntegerField()
+
+    def __str__(self):
+        return self.language.name
+
     class Meta:
-        verbose_name = 'عضو'
-        verbose_name_plural = 'اعضاء'
+        verbose_name = 'User knows Programming Language'
+
 
