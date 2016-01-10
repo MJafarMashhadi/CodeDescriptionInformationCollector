@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset
+from .models import Member
 
 
 def login(request):
@@ -35,14 +36,22 @@ def register(request):
 
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
+        pls = ProgrammingLanguagesFormset(request.POST, instance=Member())
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('core:login'))
+            new_member = form.save()
+            pls = ProgrammingLanguagesFormset(request.POST, instance=new_member)
+            if pls.is_valid():
+                pls.save()
+                return HttpResponseRedirect(reverse('core:login'))
+            else:
+                new_member.delete()
     else:
         form = RegistrationForm()
+        pls = ProgrammingLanguagesFormset()
 
     return render(request, 'register.html', context={
-        'register_form': form
+        'register_form': form,
+        'programming_languages': pls
     })
 
 

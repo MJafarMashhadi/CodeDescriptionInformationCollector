@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin, _
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class MemberManager(UserManager):
@@ -80,7 +81,7 @@ class ProgrammingLanguage(models.Model):
 class UserKnowsPL(models.Model):
     user = models.ForeignKey(Member)
     language = models.ForeignKey(ProgrammingLanguage)
-    proficiency = models.SmallIntegerField()
+    proficiency = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     def __str__(self):
         return self.language.name
