@@ -108,6 +108,7 @@ class CodeSnippet(models.Model):
     code = models.TextField(null=False, blank=False)
     language = models.ForeignKey(ProgrammingLanguage)
     name = models.CharField(max_length=200, null=True, blank=False)
+    date_time = models.DateTimeField(auto_now_add=True)
 
     usersViewed = models.ManyToManyField(Member, through='Comment', related_name='comments')
 
