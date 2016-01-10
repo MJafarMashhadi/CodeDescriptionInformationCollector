@@ -7,7 +7,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
 from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset
-from .models import Member
+from .models import Member, CodeSnippet
 
 
 def login(request):
@@ -61,6 +61,17 @@ def logout(request):
 
 
 def home(request):
-    return render(request, 'home.html', context={
+    all_snippets = CodeSnippet.objects.all()
+    if request.user.is_authenticated():
+        programming_languages = request.user.programming_languages.all()
+        commentable_snippets = request.user.get_commentable_snippets()
+        understandable_snippets = request.user.get_understandable_snippets()
+    else:
+        programming_languages = commentable_snippets = understandable_snippets = None
 
+    return render(request, 'home.html', context={
+        'all_snippets': all_snippets,
+        'programming_languages': programming_languages,
+        'commentable_snippets': commentable_snippets,
+        'understandable_snippets': understandable_snippets,
     })

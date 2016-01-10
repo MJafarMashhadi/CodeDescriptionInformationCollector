@@ -15,12 +15,13 @@ class PLAdmin(admin.ModelAdmin):
         ('compiled', 'interpreted')
     )
 
+
 @admin.register(UserKnowsPL)
 class UserKnowsPLAdmin(admin.ModelAdmin):
     list_display = ('user', 'language', 'proficiency')
 
 
-class KnowLangaugeInline(admin.TabularInline):
+class KnowLanguageInline(admin.TabularInline):
     model = UserKnowsPL
     extra = 1
 
@@ -35,4 +36,22 @@ class MemberAdmin(admin.ModelAdmin):
         ('is_active', 'is_staff', 'is_superuser'),
         ('date_joined', 'last_login')
     )
-    inlines = [KnowLangaugeInline]
+    inlines = [KnowLanguageInline]
+
+
+@admin.register(CodeSnippet)
+class CodeSnippetAdmin(admin.ModelAdmin):
+    list_display = ('language', 'name')
+    fields = (
+        ('name', 'language'),
+        'code'
+    )
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'date_time')
+    fields = (
+        ('user', 'snippet'),
+        'comment'
+    )
