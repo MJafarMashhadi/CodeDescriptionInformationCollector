@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.core.exceptions import ValidationError
-from .models import Member, UserKnowsPL, ProgrammingLanguage
+from .models import Member, UserKnowsPL, Comment
 from django.forms import inlineformset_factory
+
 
 class LoginForm(AuthenticationForm):
 
@@ -24,3 +24,10 @@ class RegistrationForm(UserCreationForm):
         )
 
 ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=4, can_delete=False)
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        exclude = ('date_time', 'user', 'snippet')

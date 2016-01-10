@@ -12,37 +12,7 @@
     {% else %}
     <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or <a href="{% url 'core:register' %}" class="btn">Register</a>
     {% endif %}
-    {% if request.user.is_authenticated %}
-    <p>
-        Programming languages that you know:
-    </p>
-    <ul>
-    {% for pl in programming_languages %}
-        <li>{{ pl }}</li>
-    {% endfor %}
-    </ul>
-
-    <p>All snippets:</p>
-    <ul>
-    {% for snippet in all_snippets %}
-        <li>{{ snippet }}</li>
-    {% endfor %}
-    </ul>
-
-    <p>Those you know:</p>
-    <ul>
-    {% for snippet in understandable_snippets %}
-        <li>{{ snippet }}</li>
-    {% endfor %}
-    </ul>
-
-    <p>Those you know but didn't commented on them yet:</p>
-    <ul>
-    {% for snippet in commentable_snippets %}
-        <li>{{ snippet }}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
+    {% include 'side_info.html' %}
 </div>
 </body>
 </html>

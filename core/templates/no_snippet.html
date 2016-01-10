@@ -1,0 +1,26 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>No methods :-(</title>
+    {% include 'header.html' %}
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            {% if finished %}
+                <p>Hurray, No more methods!</p>
+            {% else %}
+                <p>Sorry, we have no methods in {{ language }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+            <span><strong>Explore more:</strong></span>
+            {% include 'side_info.html' %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

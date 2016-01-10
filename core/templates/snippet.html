@@ -1,0 +1,45 @@
+{% load bootstrap %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Code snippet | {{ snippet.name }}</title>
+    {% include 'header.html' %}
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+            <form action="{% url 'core:submit_snippet' %}" method="post">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span>#{{ order }} {{ snippet.name }}</span>&nbsp;
+                        <span class="label label-info">{{ snippet.language.name }}</span>
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>Read the following code carefully:</strong></p>
+
+                        <pre>{{ snippet.code }}</pre>
+
+                        <p><strong>What does this code do?</strong></p>
+
+
+                        {% csrf_token %}
+                        <input type="hidden" name="snippet" value="{{ snippet.pk }}"/>
+                        <input type="hidden" name="next" value="{{ request.path }}?order={{ next_order }}"/>
+                        {{ comment_form|bootstrap }}
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        or <a href="?order={{ next_order }}">Try another one</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs hidden-print">
+            {% include 'side_info.html' %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
