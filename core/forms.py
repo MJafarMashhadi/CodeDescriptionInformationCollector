@@ -23,7 +23,7 @@ class RegistrationForm(UserCreationForm):
             'have_work_outside_college_projects'
         )
 
-ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=4, can_delete=False)
+ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=2, can_delete=False)
 
 
 class CommentForm(forms.ModelForm):

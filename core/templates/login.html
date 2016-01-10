@@ -10,17 +10,19 @@
 <body>
 <div class="container">
     <h1>Login</h1>
+    <form method="post" action="{% url 'core:login' %}">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                {% csrf_token %}
+                {{ login_form | bootstrap }}
+            </div>
 
-    <div>
-        <form method="post" action="{% url 'core:login' %}">
-            {% csrf_token %}
-            {{ login_form | bootstrap }}
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-    </div>
-    <p>
-        Don't have an account? <a href="{% url 'core:register' %}">Sign up</a> here!
-    </p>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <span>Don't have an account? <a href="{% url 'core:register' %}">Sign up</a> here!</span>
+            </div>
+        </div>
+    </form>
 </div>
 </body>
 </html>
