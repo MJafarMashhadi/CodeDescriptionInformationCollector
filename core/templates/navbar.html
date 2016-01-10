@@ -1,0 +1,18 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        {% if request.user.is_authenticated %}
+            <span class="navbar-text">Hi <strong>{{ request.user.get_short_name }}</strong>!</span>
+            <span class="navbar-text"><a href="{% url 'core:profile' %}">change</a> your profile</span>
+            <div class="pull-right">
+                <div class="navbar-form">
+                    <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="navbar-form">
+                <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
+                <a href="{% url 'core:register' %}" class="btn">Register</a>
+            </div>
+        {% endif %}
+    </div>
+</nav>

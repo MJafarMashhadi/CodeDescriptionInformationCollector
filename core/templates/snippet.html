@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="container">
+    {% include 'navbar.html' %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
             <form action="{% url 'core:submit_snippet' %}" method="post">
@@ -26,12 +27,12 @@
 
                         {% csrf_token %}
                         <input type="hidden" name="snippet" value="{{ snippet.pk }}"/>
-                        <input type="hidden" name="next" value="{{ request.path }}?order={{ next_order }}"/>
+                        <input type="hidden" name="next" value="{{ next_url }}"/>
                         {{ comment_form|bootstrap }}
                     </div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        or <a href="?order={{ next_order }}">Try another one</a>
+                        or <a href="{{ next_url }}">Try another one</a>
                     </div>
                 </div>
             </form>

@@ -7,11 +7,7 @@
 </head>
 <body>
 <div class="container">
-    {% if request.user.is_authenticated %}
-    <a href="{% url 'core:logout' %}" class="btn">Logout</a>
-    {% else %}
-    <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or <a href="{% url 'core:register' %}" class="btn">Register</a>
-    {% endif %}
+    {% include 'navbar.html' %}
     {% include 'side_info.html' %}
 </div>
 </body>
