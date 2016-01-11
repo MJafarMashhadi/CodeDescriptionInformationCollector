@@ -27,12 +27,16 @@
 
                         {% csrf_token %}
                         <input type="hidden" name="snippet" value="{{ snippet.pk }}"/>
+                        {% if next_url %}
                         <input type="hidden" name="next" value="{{ next_url }}"/>
+                        {% endif %}
                         {{ comment_form|bootstrap }}
                     </div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        {% if next_url %}
                         or <a href="{{ next_url }}">Try another one</a>
+                        {% endif %}
                     </div>
                 </div>
             </form>

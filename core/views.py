@@ -121,9 +121,7 @@ def show_snippet(request, name):
 
     context = {
         'snippet': snippet,
-        'order': 1,
-        'comment_form': comment_form,
-        'next_url': 2  # TODO: get next snippet
+        'comment_form': comment_form
     }
     context.update(_get_sidebar_context(request))
 
