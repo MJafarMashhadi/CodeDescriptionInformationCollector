@@ -6,7 +6,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
-from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset, CommentForm
+from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset, CommentForm, UserProfileForm, \
+    ChangeProgrammingLanguagesFormset
 from .models import Member, CodeSnippet, Comment
 
 
@@ -86,7 +87,8 @@ def home(request):
 def snippet_lang(request, language):
     order = int(request.GET.get('order', 1)) - 1
     try:
-        snippet = CodeSnippet.objects.filter(language__name__iexact=language).order_by('-date_time').all()[order:1 + order].get()
+        snippet = CodeSnippet.objects.filter(language__name__iexact=language).order_by('-date_time').all()[
+                  order:1 + order].get()
     except CodeSnippet.DoesNotExist:
         return render_to_response('no_snippet.html', context={'language': language, 'finished': order != 1})
 
@@ -100,7 +102,7 @@ def snippet_lang(request, language):
         'snippet': snippet,
         'order': order + 1,
         'comment_form': comment_form,
-        'next_order': order + 1 + 1
+        'next_url': '{}?order={}'.format(request.path, order + 2)
     }
     context.update(_get_sidebar_context(request))
 
@@ -121,7 +123,7 @@ def show_snippet(request, name):
         'snippet': snippet,
         'order': 1,
         'comment_form': comment_form,
-        'next_order': 2
+        'next_url': 2  # TODO: get next snippet
     }
     context.update(_get_sidebar_context(request))
 
@@ -147,3 +149,24 @@ def submit_snippet(request):
         return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
     else:
         pass  # TODO: redirect back to form w/ validation errors
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(data=request.POST, instance=request.user)
+        pls = ChangeProgrammingLanguagesFormset(data=request.POST, instance=request.user)
+        if form.is_valid() and pls.is_valid():
+            form.save()
+            pls.save()
+    else:
+        form = UserProfileForm(instance=request.user)
+        pls = ChangeProgrammingLanguagesFormset(instance=request.user)
+
+    context = {
+        'profile_form': form,
+        'programming_languages_from': pls
+    }
+    context.update(_get_sidebar_context(request))
+
+    return render(request, 'profile.html', context=context)

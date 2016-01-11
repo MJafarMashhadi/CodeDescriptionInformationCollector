@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from .models import Member, UserKnowsPL, Comment
 from django.forms import inlineformset_factory
 
@@ -24,6 +24,19 @@ class RegistrationForm(UserCreationForm):
         )
 
 ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=2, can_delete=False)
+
+ChangeProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=1, can_delete=True)
+
+
+class UserProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = Member
+        fields = (
+            'first_name', 'last_name',
+            'academic_degree', 'experience',
+            'have_work_outside_college_projects'
+        )
 
 
 class CommentForm(forms.ModelForm):
