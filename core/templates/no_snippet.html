@@ -12,7 +12,7 @@
             {% if finished %}
                 <p>Hurray, No more methods!</p>
             {% else %}
-                <p>Sorry, we have no methods in {{ language }}</p>
+                <p>Sorry, we have no more methods{% if language %} in {{ language }}{% endif %}</p>
             {% endif %}
         </div>
     </div>
