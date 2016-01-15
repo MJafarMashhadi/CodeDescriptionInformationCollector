@@ -2,7 +2,6 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
@@ -90,7 +89,9 @@ def snippet_lang(request, language):
         snippet = CodeSnippet.objects.filter(language__name__iexact=language).order_by('-date_time').all()[
                   order:1 + order].get()
     except CodeSnippet.DoesNotExist:
-        return render_to_response('no_snippet.html', context={'language': language, 'finished': order != 1})
+        context = {'language': language, 'finished': order != 1}
+        context.update(_get_sidebar_context(request))
+        return render_to_response('no_snippet.html', context=context)
 
     try:
         prev_comment = Comment.objects.get(user=request.user, snippet=snippet)
@@ -139,7 +140,14 @@ def submit_snippet(request):
     except Comment.DoesNotExist:
         comment_form = CommentForm(data=request.POST)
 
-    if comment_form.is_valid():
+    if 'skip' in request.POST:
+        comment = Comment()
+        comment.snippet = snippet
+        comment.user = request.user
+        comment.comment = '[SKIPPED]'
+        comment.save()
+        return HttpResponseRedirect(reverse('core:random'))
+    elif comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
         comment.snippet = snippet
@@ -148,6 +156,23 @@ def submit_snippet(request):
     else:
         pass  # TODO: redirect back to form w/ validation errors
 
+@login_required
+def show_random_snippet(request):
+    try:
+        available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()[:1]
+
+        context = {
+            'snippet': available_snippets[0],
+            'comment_form': CommentForm(),
+            'next_url': reverse('core:random')
+        }
+        context.update(_get_sidebar_context(request))
+
+        return render(request, 'snippet.html', context=context)
+    except:
+        context = {'finished': True}
+        context.update(_get_sidebar_context(request))
+        return render(request, 'no_snippet.html', context=context)
 
 @login_required
 def profile(request):

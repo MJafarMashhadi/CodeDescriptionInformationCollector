@@ -35,7 +35,8 @@
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
                         {% if next_url %}
-                        or <a href="{{ next_url }}">Try another one</a>
+                            or
+                            <input class="btn" type="submit" name="skip" value="Try another one" />
                         {% endif %}
                     </div>
                 </div>
