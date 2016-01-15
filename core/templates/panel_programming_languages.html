@@ -1,0 +1,12 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <span>Programming languages that you know:</span>
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            {% for pl in programming_languages %}
+                <li><a href="{% url 'core:snippet_by_language' language=pl.name %}">{{ pl }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
