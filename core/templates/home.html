@@ -8,7 +8,35 @@
 <body>
 <div class="container">
     {% include 'navbar.html' %}
-    {% include 'side_info.html' %}
+    {% if request.user.is_authenticated %}
+        <div class="jumbotron">
+            <a class="btn btn-lg btn-primary" href="{% url 'core:random' %}">Show me some code snippets!</a>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            {% include 'panel_programming_languages.html' %}
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            {% include 'panel_random_snippets.html' %}
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            {% include 'panel_knows_languages.html' %}
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            {% include 'panel_virgin_snippets.html' %}
+        </div>
+    {% else %}
+        <div class="jumbotron" align="center">
+            <a class="btn btn-lg btn-primary" href="{% url 'core:login' %}">Log in</a>
+            <span class="h3">or</span>
+            <a class="btn btn-lg btn-default" href="{% url 'core:register' %}">register</a>
+
+            <div class="clear"></div>
+            <p class="h3">to use the portal.</p>
+        </div>
+    {% endif %}
 </div>
 </body>
 </html>
