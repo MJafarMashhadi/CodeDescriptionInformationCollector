@@ -92,8 +92,10 @@ DATABASES = {
 
 if not DEBUG:
     import dj_database_url
-    print ("Postgres db connection url: ", os.environ['OPENSHIFT_POSTGRESQL_DB_URL'])
-    DATABASES['default'] = dj_database_url.config(env='OPENSHIFT_POSTGRESQL_DB_URL')
+    print("Postgres db connection url: ", os.environ['OPENSHIFT_POSTGRESQL_DB_URL'])
+    database_url_config = dj_database_url.config(env='OPENSHIFT_POSTGRESQL_DB_URL')
+    print("Configuration = ", database_url_config)
+    DATABASES['default'] = database_url_config
 
 
 # Internationalization
