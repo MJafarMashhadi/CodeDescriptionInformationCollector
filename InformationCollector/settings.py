@@ -94,7 +94,6 @@ if not DEBUG:
     import dj_database_url
     database_url_config = dj_database_url.config(env='OPENSHIFT_POSTGRESQL_DB_URL')
     database_url_config['NAME'] = 'python'
-    print("Database config", database_url_config)
     DATABASES['default'] = database_url_config
 
 
