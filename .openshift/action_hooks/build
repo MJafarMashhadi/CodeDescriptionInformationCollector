@@ -3,8 +3,3 @@ if [ ! -d ${OPENSHIFT_DATA_DIR}media ]; then
     mkdir -p ${OPENSHIFT_DATA_DIR}media
 fi
 ln -snf ${OPENSHIFT_DATA_DIR}media $OPENSHIFT_REPO_DIR/wsgi/static/media
-
-echo 'Installing bower components'
-cd $OPENSHIFT_REPO_DIR/static
-HOME=$OPENSHIFT_REPO_DIR/static npm install bower@1.0
-HOME=$OPENSHIFT_REPO_DIR/static bower install
