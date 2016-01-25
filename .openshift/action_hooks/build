@@ -6,5 +6,5 @@ ln -snf ${OPENSHIFT_DATA_DIR}media $OPENSHIFT_REPO_DIR/wsgi/static/media
 
 echo 'Installing bower components'
 cd $OPENSHIFT_REPO_DIR/static
-npm install bower
-bower install
+HOME=$OPENSHIFT_REPO_DIR/static npm install bower
+HOME=$OPENSHIFT_REPO_DIR/static bower install
