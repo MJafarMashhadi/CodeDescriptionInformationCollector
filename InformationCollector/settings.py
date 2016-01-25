@@ -25,7 +25,10 @@ SECRET_KEY = '-9-em27$c02rul=id9k(j5roty_!qk@wkgbzx+xp8hk_pir3j4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+if 'OPENSHIFT_POSTGRESQL_VERSION' in os.environ:
+    DEBUG = False
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,7 +87,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+
 }
+
+if not DEBUG:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(default='OPENSHIFT_POSTGRESQL_DB_URL')
 
 
 # Internationalization
