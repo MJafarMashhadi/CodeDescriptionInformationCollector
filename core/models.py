@@ -67,7 +67,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return ('%s %s' % (self.first_name, self.last_name)).strip()
 
     def get_understandable_snippets_query_set(self):
-        return CodeSnippet.objects.filter(language__in=self.programming_languages.all())
+        return CodeSnippet.objects.select_related('language').filter(language__in=self.programming_languages.all())
 
     def get_understandable_snippets(self):
         return self.get_understandable_snippets_query_set().all()
@@ -111,6 +111,10 @@ class CodeSnippet(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
 
     usersViewed = models.ManyToManyField(Member, through='Comment', related_name='comments')
+
+    @property
+    def n_comments(self):
+        return self.usersViewed.count()
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)

@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render_to_response
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -8,6 +9,8 @@ from django.shortcuts import render, get_object_or_404
 from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset, CommentForm, UserProfileForm, \
     ChangeProgrammingLanguagesFormset
 from .models import Member, CodeSnippet, Comment
+
+THRESHOLD = 5
 
 
 def login(request):
@@ -156,23 +159,30 @@ def submit_snippet(request):
     else:
         pass  # TODO: redirect back to form w/ validation errors
 
+
 @login_required
 def show_random_snippet(request):
     try:
-        available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()[:1]
+        available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()
+        better_snippets = [snippet for snippet in available_snippets if snippet.n_comments < THRESHOLD]
+
+        if len(better_snippets) == 0:
+            better_snippets = available_snippets
 
         context = {
-            'snippet': available_snippets[0],
+            'snippet': random.choice(better_snippets),
             'comment_form': CommentForm(),
             'next_url': reverse('core:random')
         }
         context.update(_get_sidebar_context(request))
 
         return render(request, 'snippet.html', context=context)
-    except:
+    except Exception as e:
+        print(e)
         context = {'finished': True}
         context.update(_get_sidebar_context(request))
         return render(request, 'no_snippet.html', context=context)
+
 
 @login_required
 def profile(request):
