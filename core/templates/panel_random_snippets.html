@@ -12,7 +12,9 @@
         <tbody>
         {% for snippet in all_snippets %}
             <tr>
-                <td>{{ snippet.name }}</td>
+                <td>
+                    <a href="{% url 'core:show_snippet' snippet.name %}">{{ snippet.name }}</a>
+                </td>
                 <td>{{ snippet.language.name }}</td>
             </tr>
         {% endfor %}
