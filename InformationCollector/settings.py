@@ -127,4 +127,6 @@ AUTH_USER_MODEL = 'core.Member'
 LOGIN_URL = 'core:login'
 
 # Django debug toolbar
-JQUERY_URL = STATIC_URL + 'jquery/dist/jquery.min.js'
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '',
+}
