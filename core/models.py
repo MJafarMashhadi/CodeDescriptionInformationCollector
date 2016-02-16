@@ -114,7 +114,7 @@ class CodeSnippet(models.Model):
 
     @property
     def n_comments(self):
-        return self.usersViewed.count()
+        return self.usersViewed.exclude(comment='').count()
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)
@@ -123,8 +123,9 @@ class CodeSnippet(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(Member)
     snippet = models.ForeignKey(CodeSnippet)
-    comment = models.TextField()
+    comment = models.TextField(null=True, blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
+    skip = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} comment on {}'.format(self.user.get_full_name(), self.snippet.name)

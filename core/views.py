@@ -147,7 +147,7 @@ def submit_snippet(request):
         comment = Comment()
         comment.snippet = snippet
         comment.user = request.user
-        comment.comment = '[SKIPPED]'
+        comment.skip = True
         comment.save()
         return HttpResponseRedirect(reverse('core:random'))
     elif comment_form.is_valid():

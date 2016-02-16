@@ -44,3 +44,8 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         exclude = ('date_time', 'user', 'snippet')
+        widgets = {
+            'snippet': forms.Textarea({
+                'rows': 4
+            })
+        }
