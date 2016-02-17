@@ -5,6 +5,46 @@
     <meta charset="UTF-8">
     <title>Code snippet | {{ snippet.name }}</title>
     {% include 'header.html' %}
+    <script type="text/javascript">
+        $(function () {
+            var $wordCount = $('#word_count');
+            var $wordCountWrapper = $('#word_count_text');
+            var $wordCountWarning = $('#word_count_warning');
+
+            $wordCountWarning.hide();
+
+            var updateCounter = function () {
+                var words = (function (val) {
+                    if (val !== "") {
+                        return $.trim(val).replace(/\s+/g, " ").split(" ").length;
+                    } else {
+                        return 0;
+                    }
+                })($(this).val());
+
+                $wordCount.html(words);
+                if (words > 30) {
+                    $wordCountWrapper.removeClass('text-info').addClass('text-warning');
+                    if (words > 40) {
+                        $wordCountWarning.show();
+                    } else {
+                        $wordCountWarning.hide();
+                    }
+                } else {
+                    $wordCountWrapper.add('text-info').removeClass('text-warning');
+                    $wordCountWarning.hide();
+                }
+
+            };
+
+            $('textarea')
+                    .change(updateCounter)
+                    .focus(updateCounter)
+                    .blur(updateCounter)
+                    .keypress(updateCounter)
+                    .click(updateCounter);
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -31,6 +71,10 @@
                         <input type="hidden" name="next" value="{{ next_url }}"/>
                         {% endif %}
                         {{ comment_form|bootstrap }}
+                        <p id="word_count_text" class="text-info">Approximate word count: <span id="word_count">0</span></p>
+                        <p id="word_count_warning" class="text-danger">
+                            {# TODO: Badihi #}
+                        </p>
                     </div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
