@@ -114,7 +114,7 @@ class CodeSnippet(models.Model):
 
     @property
     def n_comments(self):
-        return self.usersViewed.exclude(comment='').count()
+        return self.usersViewed.exclude(comment__skip=True).count()
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)
