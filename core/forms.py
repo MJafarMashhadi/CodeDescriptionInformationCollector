@@ -22,6 +22,9 @@ class RegistrationForm(UserCreationForm):
             'academic_degree', 'experience',
             'have_work_outside_college_projects'
         )
+        help_texts = {
+            'experience': 'in months'
+        }
 
 ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=2, can_delete=False)
 
@@ -37,6 +40,9 @@ class UserProfileForm(forms.ModelForm):
             'academic_degree', 'experience',
             'have_work_outside_college_projects'
         )
+        help_texts = {
+            'experience': 'in months'
+        }
 
 
 class CommentForm(forms.ModelForm):
