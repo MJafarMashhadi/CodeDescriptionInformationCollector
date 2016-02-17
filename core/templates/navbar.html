@@ -1,7 +1,8 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" style="margin-top: 20px">
     <div class="container-fluid">
         {% if request.user.is_authenticated %}
             <span class="navbar-text">Hi <strong>{{ request.user.get_short_name }}</strong>!</span>
+            <span class="navbar-text"><a href="/">Home</a></span>
             <span class="navbar-text"><a href="{% url 'core:profile' %}">change</a> your profile</span>
             {% if request.user.is_staff %}
                 <span class="navbar-text"><a href="/admin">manage site</a></span>
