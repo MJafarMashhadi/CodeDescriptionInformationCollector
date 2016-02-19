@@ -55,3 +55,7 @@ class CommentAdmin(admin.ModelAdmin):
         ('user', 'snippet'),
         'comment'
     )
+
+    def get_queryset(self, request):
+        qs = super(CommentAdmin, self).get_queryset(request)
+        return qs.filter(skip=False)
