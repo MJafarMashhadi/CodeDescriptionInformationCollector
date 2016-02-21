@@ -76,14 +76,15 @@
                         {{ comment_form|bootstrap }}
                         <p id="word_count_text" class="text-info">Approximate word count: <span id="word_count">0</span></p>
                         <p id="word_count_warning" class="text-danger">
-                            This seems to be a long summary.
+                            This seems to be a long summary!
                         </p>
                     </div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        {% if next_url %}
+                        {% if next_url and available_skips > 0 %}
                             or
                             <input class="btn" type="submit" name="skip" value="Try another one" />
+                            ({{ available_skips }} skip{{ available_skips|pluralize }} left)
                         {% endif %}
                     </div>
                 </div>

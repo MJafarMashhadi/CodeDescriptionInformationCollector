@@ -1,5 +1,5 @@
 import random
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -11,11 +11,12 @@ from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset, Com
 from .models import Member, CodeSnippet, Comment
 
 THRESHOLD = 5
+MAX_SKIP = 4
 
 
 def login(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('core:home'))
+        return redirect('core:home')
 
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
@@ -35,7 +36,7 @@ def login(request):
 
 def register(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('core:home'))
+        return redirect('core:home')
 
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
@@ -45,7 +46,7 @@ def register(request):
             pls = ProgrammingLanguagesFormset(request.POST, instance=new_member)
             if pls.is_valid():
                 pls.save()
-                return HttpResponseRedirect(reverse('core:login'))
+                return redirect('core:login')
             else:
                 new_member.delete()
     else:
@@ -60,13 +61,13 @@ def register(request):
 
 def logout(request):
     auth_logout(request)
-    return HttpResponseRedirect(reverse('core:home'))
+    return redirect('core:home')
 
 
 def _get_sidebar_context(request):
     all_snippets = CodeSnippet.objects.order_by('?').all()[:10]
     if request.user.is_authenticated():
-        programming_languages = request.user.programming_languages.all()
+        # programming_languages = request.user.programming_languages.all()
         commentable_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()[:10]
         understandable_snippets = request.user.get_understandable_snippets_query_set().order_by('-date_time').all()[:10]
     else:
@@ -74,7 +75,7 @@ def _get_sidebar_context(request):
 
     return {
         'all_snippets': all_snippets,
-        'programming_languages': programming_languages,
+        # 'programming_languages': programming_languages,
         'commentable_snippets': commentable_snippets,
         'understandable_snippets': understandable_snippets,
     }
@@ -106,7 +107,9 @@ def snippet_lang(request, language):
         'snippet': snippet,
         'order': order + 1,
         'comment_form': comment_form,
-        'next_url': '{}?order={}'.format(request.path, order + 2)
+        'next_url': '{}?order={}'.format(request.path, order + 2),
+        'skips': request.session.get('skips', 0),
+        'available_skips': MAX_SKIP - request.session.get('skips', 0)
     }
     context.update(_get_sidebar_context(request))
 
@@ -125,7 +128,9 @@ def show_snippet(request, name):
 
     context = {
         'snippet': snippet,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'skips': request.session.get('skips', 0),
+        'available_skips': MAX_SKIP - request.session.get('skips', 0)
     }
     context.update(_get_sidebar_context(request))
 
@@ -144,35 +149,54 @@ def submit_snippet(request):
         comment_form = CommentForm(data=request.POST)
 
     if 'skip' in request.POST:
-        comment = Comment()
-        comment.snippet = snippet
-        comment.user = request.user
-        comment.skip = True
-        comment.save()
-        return HttpResponseRedirect(reverse('core:random'))
+        if request.session.get('skips', 0) < MAX_SKIP:
+            comment = Comment()
+            comment.snippet = snippet
+            comment.user = request.user
+            comment.skip = True
+            comment.save()
+            if 'skips' not in request.session:
+                request.session['skips'] = 0
+            request.session['skips'] += 1
+
+            return redirect('core:random')
+        else:
+            return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))
     elif comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
         comment.snippet = snippet
         comment.save()
+        request.session['skips'] = 0
         return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
     else:
-        pass  # TODO: redirect back to form w/ validation errors
+        return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))
 
 
 @login_required
 def show_random_snippet(request):
+    snippet = None
+    if 'id' in request.GET:
+        try:
+            snippet = CodeSnippet.get(pk=request.GET['id'])
+        except CodeSnippet.DoesNotExist:
+            pass
     try:
-        available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()
-        better_snippets = [snippet for snippet in available_snippets if snippet.n_comments < THRESHOLD]
+        if not snippet:
+            available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()
+            better_snippets = list(filter(lambda snippet: snippet.n_comments < THRESHOLD, available_snippets))
 
-        if len(better_snippets) == 0:
-            better_snippets = available_snippets
+            if len(better_snippets) == 0:
+                better_snippets = available_snippets
+
+            snippet = random.choice(better_snippets)
 
         context = {
-            'snippet': random.choice(better_snippets),
+            'snippet': snippet,
             'comment_form': CommentForm(),
-            'next_url': reverse('core:random')
+            'next_url': reverse('core:random'),
+            'skips': request.session.get('skips', 0),
+            'available_skips': MAX_SKIP - request.session.get('skips', 0)
         }
         context.update(_get_sidebar_context(request))
 
