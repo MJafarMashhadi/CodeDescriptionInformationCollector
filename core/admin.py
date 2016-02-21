@@ -28,15 +28,17 @@ class KnowLanguageInline(admin.TabularInline):
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'academic_degree', 'experience', 'is_active')
+    list_display = ('email', 'first_name', 'last_name', 'academic_degree', 'score', 'is_active')
     fields = (
         ('first_name', 'last_name'),
-        ('email', 'password'),
+        'email', 'score',
         ('academic_degree', 'experience', 'have_work_outside_college_projects'),
         ('is_active', 'is_staff', 'is_superuser'),
         ('date_joined', 'last_login')
     )
     inlines = [KnowLanguageInline]
+    readonly_fields = ['date_joined', 'last_login', 'score', 'email']
+    ordering = ['is_active', 'score', 'email']
 
 
 @admin.register(CodeSnippet)

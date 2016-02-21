@@ -55,6 +55,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     programming_languages = models.ManyToManyField('ProgrammingLanguage', through='UserKnowsPL')
 
+    score = models.PositiveSmallIntegerField(default=0)
+
     objects = MemberManager()
 
     USERNAME_FIELD = 'email'
