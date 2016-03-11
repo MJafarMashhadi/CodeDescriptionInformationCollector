@@ -43,9 +43,10 @@ class MemberAdmin(admin.ModelAdmin):
 
 @admin.register(CodeSnippet)
 class CodeSnippetAdmin(admin.ModelAdmin):
-    list_display = ('language', 'name')
+    list_display = ('language', 'name', 'score')
     fields = (
         ('name', 'language'),
+        'score',
         'code'
     )
 
