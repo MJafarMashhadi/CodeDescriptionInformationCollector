@@ -112,6 +112,7 @@ class CodeSnippet(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
     date_time = models.DateTimeField(auto_now_add=True)
     score = models.PositiveIntegerField(default=5)
+    is_starred = models.BooleanField(default=False)
 
     usersViewed = models.ManyToManyField(Member, through='Comment', related_name='comments')
 
