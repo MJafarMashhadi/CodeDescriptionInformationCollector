@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
+    {% block extra_js %}{% endblock %}
+    {% block extra_css %}{% endblock %}
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        {% if request.user.is_authenticated %}
+            <p class="navbar-text">Hi <strong>{{ request.user.get_short_name }}</strong>!</p>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'core:profile' %}">Profile</a></li>
+                {% if request.user.is_staff %}
+                    <li><a href="{% url 'admin:index' %}">manage site</a></li>
+                {% endif %}
+            </ul>
+        {% else %}
+            <div class="navbar-form">
+                <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
+                <a href="{% url 'core:register' %}" class="btn">Register</a>
+            </div>
+        {% endif %}
+        <div class="nav navbar-nav navbar-right">
+            <div class="navbar-form">
+                <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+</body>
+</html>

@@ -1,12 +1,8 @@
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>No methods :-(</title>
-    {% include 'header.html' %}
-</head>
-<body>
-<div class="container">
-    {% include 'navbar.html' %}
+{% extends 'base.html' %}
+
+{% block title %}No methods :-({% endblock %}
+
+{% block body %}
     <div class="row">
         <div class="jumbotron">
             {% if finished %}
@@ -22,6 +18,4 @@
             {% include 'side_info.html' %}
         </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

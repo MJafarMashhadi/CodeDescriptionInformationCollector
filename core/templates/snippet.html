@@ -1,10 +1,8 @@
+{% extends 'base.html' %}
 {% load bootstrap %}
-<!doctype html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Code snippet | {{ snippet.name }}</title>
-    {% include 'header.html' %}
+{% block header %}Code snippet | {{ snippet.name }}{% endblock %}
+
+{% block extra_js %}
     <script type="text/javascript">
         $(function () {
             var $wordCount = $('#word_count');
@@ -48,10 +46,8 @@
                     .click(updateCounter);
         });
     </script>
-</head>
-<body>
-<div class="container">
-    {% include 'navbar.html' %}
+{% endblock %}
+{% block body %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
             <form action="{% url 'core:submit_snippet' %}" method="post">
@@ -71,10 +67,12 @@
                         {% csrf_token %}
                         <input type="hidden" name="snippet" value="{{ snippet.pk }}"/>
                         {% if next_url %}
-                        <input type="hidden" name="next" value="{{ next_url }}"/>
+                            <input type="hidden" name="next" value="{{ next_url }}"/>
                         {% endif %}
                         {{ comment_form|bootstrap }}
-                        <p id="word_count_text" class="text-info">Approximate word count: <span id="word_count">0</span></p>
+                        <p id="word_count_text" class="text-info">Approximate word count: <span id="word_count">0</span>
+                        </p>
+
                         <p id="word_count_warning" class="text-danger">
                             This seems to be a long summary!
                         </p>
@@ -83,7 +81,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                         {% if next_url and available_skips > 0 %}
                             or
-                            <input class="btn" type="submit" name="skip" value="Try another one" />
+                            <input class="btn" type="submit" name="skip" value="Try another one"/>
                             ({{ available_skips }} skip{{ available_skips|pluralize }} left)
                         {% endif %}
                     </div>
@@ -94,6 +92,4 @@
             {% include 'side_info.html' %}
         </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

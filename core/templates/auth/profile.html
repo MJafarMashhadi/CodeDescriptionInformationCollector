@@ -39,8 +39,8 @@
     </script>
 </head>
 <body>
+{% include 'navbar.html' %}
 <div class="container">
-    {% include 'navbar.html' %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
             <form method="post" action="{% url 'core:profile' %}">

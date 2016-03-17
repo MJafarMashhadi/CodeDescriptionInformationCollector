@@ -29,7 +29,7 @@ def login(request):
     else:
         form = LoginForm()
 
-    return render(request, 'login.html', context={
+    return render(request, 'auth/login.html', context={
         'login_form': form
     })
 
@@ -53,7 +53,7 @@ def register(request):
         form = RegistrationForm()
         pls = ProgrammingLanguagesFormset()
 
-    return render(request, 'register.html', context={
+    return render(request, 'auth/register.html', context={
         'register_form': form,
         'programming_languages': pls
     })
@@ -226,4 +226,4 @@ def profile(request):
     }
     context.update(_get_sidebar_context(request))
 
-    return render(request, 'profile.html', context=context)
+    return render(request, 'auth/profile.html', context=context)

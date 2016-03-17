@@ -1,17 +1,14 @@
-{% load static %}
-{% load bootstrap %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    {% include 'header.html' %}
+{% extends 'base.html' %}
+{% load static bootstrap %}
 
+{% block title %}Register{% endblock %}
+
+{% block extra_js %}
     <script type="text/javascript">
         window.ratingOptions = {
             size: 'xs', stars: 10,
             min: 1, max: 10, step: 1,
-            showClear:false, showCaption:false
+            showClear: false, showCaption: false
         };
     </script>
 
@@ -28,19 +25,23 @@
             });
         });
     </script>
-
-    <link href="{% static 'bootstrap-star-rating/css/star-rating.min.css' %}" media="all" rel="stylesheet" type="text/css" />
     <script src="{% static 'bootstrap-star-rating/js/star-rating.min.js' %}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
             $(".programming.languages input[type=number]").rating(ratingOptions);
         });
     </script>
-</head>
-<body>
-<div class="container">
-    <h1>Register</h1>
-    <div>
+{% endblock %}
+
+{% block extra_css %}
+    <link href="{% static 'bootstrap-star-rating/css/star-rating.min.css' %}" media="all" rel="stylesheet"
+          type="text/css"/>
+{% endblock %}
+
+{% block body %}
+    <div class="col-sm-12 col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <h1>Register</h1>
+
         <form method="post" action="{% url 'core:register' %}">
             {% csrf_token %}
             <div class="panel panel-primary">
@@ -52,21 +53,21 @@
                 </div>
             </div>
             <div class="panel panel-default">
-            <div class="panel-heading">
-                <span>Programming languages that you know</span>
-            </div>
-            <div class="panel-body">
-                <div class="programming languages container-fluid">
-                    {{ programming_languages.management_form }}
-                    {% for form in programming_languages.forms %}
-                        <div class="col-lg-4 one_formset">
-                            <div class="panel panel-default">
-                                <div class="panel-body">{{ form|bootstrap }}</div>
-                            </div>
-                        </div>
-                    {% endfor %}
+                <div class="panel-heading">
+                    <span>Programming languages that you know</span>
                 </div>
-            </div>
+                <div class="panel-body">
+                    <div class="programming languages container-fluid">
+                        {{ programming_languages.management_form }}
+                        {% for form in programming_languages.forms %}
+                            <div class="col-lg-4 one_formset">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">{{ form|bootstrap }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="well">
                 <button type="submit" class="btn btn-primary">Register</button>
@@ -74,6 +75,4 @@
             </div>
         </form>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

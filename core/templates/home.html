@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Information Collector</title>
-    {% include 'header.html' %}
-</head>
-<body>
-<div class="container">
-    {% include 'navbar.html' %}
+{% extends 'base.html' %}
+
+{% block title %}Information Collector{% endblock %}
+
+{% block body %}
     {% if request.user.is_authenticated %}
         <div class="jumbotron">
             <a class="btn btn-lg btn-primary" href="{% url 'core:random' %}">Show me some code snippets!</a>
@@ -17,15 +12,15 @@
 {#        </div>#}
 
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            {% include 'panel_random_snippets.html' %}
+            {% include 'panels/panel_random_snippets.html' %}
         </div>
 
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            {% include 'panel_knows_languages.html' %}
+            {% include 'panels/panel_knows_languages.html' %}
         </div>
 
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            {% include 'panel_virgin_snippets.html' %}
+            {% include 'panels/panel_virgin_snippets.html' %}
         </div>
     {% else %}
         <div class="jumbotron" align="center">
@@ -37,6 +32,4 @@
             <p class="h3">to use the portal.</p>
         </div>
     {% endif %}
-</div>
-</body>
-</html>
+{% endblock %}

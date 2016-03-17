@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static bootstrap %}
+
+{% block title %}Login in site{% endblock %}
+
+{% block body %}
+    <div class="col-sm-12 col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <h1>Login</h1>
+
+        <form method="post" action="{% url 'core:login' %}">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    {% csrf_token %}
+                    {{ login_form | bootstrap }}
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <span>Don't have an account? <a href="{% url 'core:register' %}">Sign up</a> here!</span>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
