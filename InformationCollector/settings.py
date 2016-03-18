@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     # plugins
     'bootstrapform',
     'debug_toolbar',
+    'django_gravatar',
     # apps
     'core',
 )
