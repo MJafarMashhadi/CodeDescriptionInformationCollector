@@ -20,7 +20,7 @@ class RegistrationForm(UserCreationForm):
             'email',
             'first_name', 'last_name',
             'academic_degree', 'experience',
-            'have_work_outside_college_projects'
+            'industry_experience'
         )
         help_texts = {
             'experience': 'in months'
@@ -38,7 +38,7 @@ class UserProfileForm(forms.ModelForm):
         fields = (
             'first_name', 'last_name',
             'academic_degree', 'experience',
-            'have_work_outside_college_projects'
+            'industry_experience'
         )
         help_texts = {
             'experience': 'in months'

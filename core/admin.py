@@ -32,7 +32,7 @@ class MemberAdmin(admin.ModelAdmin):
     fields = (
         ('first_name', 'last_name'),
         'email', 'score',
-        ('academic_degree', 'experience', 'have_work_outside_college_projects'),
+        ('academic_degree', 'experience', 'industry_experience'),
         ('is_active', 'is_staff', 'is_superuser'),
         ('date_joined', 'last_login')
     )

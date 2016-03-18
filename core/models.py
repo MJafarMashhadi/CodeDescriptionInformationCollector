@@ -45,7 +45,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'),('U', 'Undergraduate')))
     experience = models.SmallIntegerField(default=0)
-    have_work_outside_college_projects = models.BooleanField(default=False)
+    industry_experience = models.PositiveIntegerField(default=0)
 
     is_staff = models.BooleanField(_('staff status'), default=False,
         help_text=_('Designates whether the user can log into this admin site.'))
