@@ -57,6 +57,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     score = models.PositiveSmallIntegerField(default=0)
 
+    badges = models.ManyToManyField('Badge', through='EarnBadge')
+
     objects = MemberManager()
 
     USERNAME_FIELD = 'email'
@@ -80,6 +82,13 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     def get_commentable_snippets(self):
         return self.get_commentable_snippets_query_set().all()
+
+    def earn_xp(self, points, description=''):
+        return XP.objects.create(
+            user=self,
+            amount=points,
+            description=description
+        )
 
 
 class ProgrammingLanguage(models.Model):
@@ -136,3 +145,29 @@ class Comment(models.Model):
 
     class Meta:
         unique_together = ('user', 'snippet')
+
+
+class XP(models.Model):
+    user = models.ForeignKey(Member, related_name='experiences')
+    amount = models.PositiveIntegerField(default=1)
+    date_time = models.DateTimeField(auto_now_add=True)
+    description = models.CharField(max_length=200)
+
+    def save(self, *args, **kwargs):
+        super(XP, self).save(*args, **kwargs)
+        user = self.user
+        user.score += self.amount
+        user.save()
+
+
+class Badge(models.Model):
+    slug = models.SlugField(primary_key=True)
+    icon = models.FileField(upload_to='badges')
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+
+
+class EarnBadge(models.Model):
+    user = models.ForeignKey(Member)
+    badge = models.ForeignKey(Badge)
+    date_time = models.DateTimeField(auto_now_add=True)

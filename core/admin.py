@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import *
 
-models = []
+models = [XP, Badge, EarnBadge]
 registration = map(admin.site.register, models)
 list(registration)  # apply, python 3 hack
 
