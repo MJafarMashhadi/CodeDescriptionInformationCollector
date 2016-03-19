@@ -1,4 +1,5 @@
 import random
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -6,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
-from .forms import LoginForm, RegistrationForm, ProgrammingLanguagesFormset, CommentForm, UserProfileForm, \
+from .forms import RegistrationForm, ProgrammingLanguagesFormset, CommentForm, UserProfileForm, \
     ChangeProgrammingLanguagesFormset
 from .models import Member, CodeSnippet, Comment
 
@@ -19,7 +20,7 @@ def login(request):
         return redirect('core:home')
 
     if request.method == 'POST':
-        form = LoginForm(data=request.POST)
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             redirect_url = request.GET.get('next', reverse('core:home'))
             if request.POST.get('remember', None):
@@ -27,7 +28,7 @@ def login(request):
             auth_login(request, form.get_user())
             return HttpResponseRedirect(redirect_url)
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
 
     return render(request, 'auth/login.html', context={
         'login_form': form

@@ -4,14 +4,6 @@ from .models import Member, UserKnowsPL, Comment
 from django.forms import inlineformset_factory
 
 
-class LoginForm(AuthenticationForm):
-
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
-        username_widget = self.fields['username'].widget
-        username_widget.input_type = 'email'
-
-
 class RegistrationForm(UserCreationForm):
 
     class Meta:

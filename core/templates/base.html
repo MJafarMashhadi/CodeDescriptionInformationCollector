@@ -33,17 +33,19 @@
                     <li><a href="{% url 'admin:index' %}">manage site</a></li>
                 {% endif %}
             </ul>
+            <div class="nav navbar-nav navbar-right">
+                <div class="navbar-form">
+                    <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
         {% else %}
-            <div class="navbar-form">
-                <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
-                <a href="{% url 'core:register' %}" class="btn">Register</a>
+            <div class="nav navbar-nav navbar-right">
+                <div class="navbar-form">
+                    <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
+                    <a href="{% url 'core:register' %}" class="btn">Register</a>
+                </div>
             </div>
         {% endif %}
-        <div class="nav navbar-nav navbar-right">
-            <div class="navbar-form">
-                <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
-            </div>
-        </div>
     </div>
 </nav>
 <div class="container">
