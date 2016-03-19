@@ -196,7 +196,7 @@ class XP(models.Model):
 
 class Badge(models.Model):
     slug = models.SlugField(primary_key=True)
-    icon = models.FileField(upload_to='badges')
+    icon = models.FileField()
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
 
