@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'debug_toolbar',
     'django_gravatar',
+    'django.contrib.humanize',
     # apps
     'core',
 )

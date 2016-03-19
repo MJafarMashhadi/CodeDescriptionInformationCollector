@@ -19,13 +19,16 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         {% if request.user.is_authenticated %}
-            <p class="navbar-text" style="margin-top: 10px;margin-bottom: 0;">
-                <img style="border-radius: 50%;" src="{% gravatar_url request.user.email 30 %}" />
-                <strong>{{ request.user.get_short_name }}</strong>
-            </p>
             <ul class="nav navbar-nav">
+                <li style="margin-top: 6px;">
+                    <a style="padding: 0;" href="{% url 'core:user_profile' username=request.user.username %}">
+                        <img style="border-radius: 50%;" src="{% gravatar_url request.user.email 40 %}" />
+                        <strong>{{ request.user.get_short_name }}</strong>
+                    </a>
+                </li>
                 <li><a href="/">Home</a></li>
-                <li><a href="{% url 'core:profile' %}">Profile</a></li>
+{#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
+                <li><a href="{# TODO #}">Leader board</a></li>
                 {% if request.user.is_staff %}
                     <li><a href="{% url 'admin:index' %}">manage site</a></li>
                 {% endif %}

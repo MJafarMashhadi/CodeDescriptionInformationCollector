@@ -227,3 +227,12 @@ def profile(request):
     context.update(_get_sidebar_context(request))
 
     return render(request, 'auth/profile.html', context=context)
+
+
+def user_profile(request, username):
+    user = get_object_or_404(Member, username=username)
+    xp_points_history = user.experiences.order_by('-date_time')[:5].all()
+    return render(request, 'auth/user_profile.html', context={
+        'user': user,
+        'xp_points_history': xp_points_history,
+    })
