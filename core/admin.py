@@ -26,6 +26,11 @@ class KnowLanguageInline(admin.TabularInline):
     extra = 1
 
 
+class EarnedBadgeInline(admin.TabularInline):
+    model = EarnBadge
+    extra = 1
+
+
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'academic_degree', 'score', 'is_active')
@@ -36,7 +41,7 @@ class MemberAdmin(admin.ModelAdmin):
         ('is_active', 'is_staff', 'is_superuser'),
         ('date_joined', 'last_login')
     )
-    inlines = [KnowLanguageInline]
+    inlines = [KnowLanguageInline, EarnedBadgeInline]
     readonly_fields = ['date_joined', 'last_login', 'score', 'email']
     ordering = ['is_active', 'score', 'email']
 
