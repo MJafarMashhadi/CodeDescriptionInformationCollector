@@ -33,10 +33,11 @@ class EarnedBadgeInline(admin.TabularInline):
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'academic_degree', 'score', 'is_active')
+    list_display = ('email', 'username', 'get_full_name', 'nickname', 'academic_degree', 'score')
     fields = (
-        ('first_name', 'last_name'),
-        'email', 'score',
+        ('first_name', 'last_name', 'nickname'),
+        ('email', 'username'),
+        'score',
         ('academic_degree', 'experience', 'industry_experience'),
         ('is_active', 'is_staff', 'is_superuser'),
         ('date_joined', 'last_login')
