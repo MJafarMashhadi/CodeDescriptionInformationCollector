@@ -116,6 +116,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
             'Proficient code summarized',
             'Monster slayer'
         ]
+        # TODO: issue 16
+        return levels[0]
 
 
 
