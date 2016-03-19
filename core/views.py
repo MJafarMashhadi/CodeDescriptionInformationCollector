@@ -143,6 +143,7 @@ def submit_snippet(request):
         return HttpResponseBadRequest()
 
     snippet = get_object_or_404(CodeSnippet, pk=request.POST.get('snippet', None))
+    is_virgin = snippet.virgin
     try:
         comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
     except Comment.DoesNotExist:
@@ -169,7 +170,10 @@ def submit_snippet(request):
         comment.snippet = snippet
         comment.save()
         request.session['skips'] = 0
-        request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
+        if is_virgin:
+            request.user.earn_xp(2 * snippet.score, 'Summarized {} for the first time (Double score)'.format(snippet.name))
+        else:
+            request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
         return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
     else:
         return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))

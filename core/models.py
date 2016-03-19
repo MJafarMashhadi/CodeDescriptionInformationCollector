@@ -104,6 +104,20 @@ class Member(AbstractBaseUser, PermissionsMixin):
             description=description
         )
 
+    @property
+    def level(self):
+        levels = [
+            'Starting to see the light',
+            'Taking your first steps',
+            '???? player',
+            'Middle of the way',
+            'Code squasher',
+            'Point warm',
+            'Proficient code summarized',
+            'Monster slayer'
+        ]
+
+
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=40, primary_key=True)
@@ -142,6 +156,10 @@ class CodeSnippet(models.Model):
     @property
     def n_comments(self):
         return self.usersViewed.exclude(comment__skip=True).count()
+
+    @property
+    def virgin(self):
+        return not Comment.objects.filter(snippet=self, skip=False).exists()
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)
