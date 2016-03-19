@@ -18,12 +18,13 @@ class RegistrationForm(UserCreationForm):
         model = Member
         fields = (
             'email',
-            'first_name', 'last_name',
+            'first_name', 'last_name', 'nickname',
             'academic_degree', 'experience',
             'industry_experience'
         )
         help_texts = {
-            'experience': 'in months'
+            'experience': 'in months',
+            'industry_experience': 'in months',
         }
 
 ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=2, can_delete=False)
@@ -36,12 +37,13 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = (
-            'first_name', 'last_name',
+            'first_name', 'last_name', 'nickname',
             'academic_degree', 'experience',
             'industry_experience'
         )
         help_texts = {
-            'experience': 'in months'
+            'experience': 'in months',
+            'industry_experience': 'in months',
         }
 
 

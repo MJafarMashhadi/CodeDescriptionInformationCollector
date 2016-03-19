@@ -1,3 +1,4 @@
+from django.core import validators
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin, _
 from django.utils import timezone
@@ -39,9 +40,22 @@ class Member(AbstractBaseUser, PermissionsMixin):
     Site user
 
     """
+    username = models.CharField(_('username'), max_length=30, unique=True,
+        help_text=_('Required. 30 characters or fewer. Letters, digits and '
+                    '-/_ only.'),
+        validators=[
+            validators.RegexValidator(r'^[\w-]+$',
+                                      _('Enter a valid username. '
+                                        'This value may contain only letters, numbers '
+                                        'and -/_ characters.'), 'invalid'),
+        ],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        })
     email = models.EmailField(_('email address'), blank=True, primary_key=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    nickname = models.CharField('Nickname', max_length=30, blank=True)
 
     academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'),('U', 'Undergraduate')))
     experience = models.SmallIntegerField(default=0)
@@ -61,8 +75,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     objects = MemberManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'academic_degree', 'experience']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'academic_degree', 'experience']
 
     def get_short_name(self):
         return self.first_name
