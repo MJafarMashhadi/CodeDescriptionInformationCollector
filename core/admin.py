@@ -72,4 +72,4 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Badge)
 class BadgeAdmin(admin.ModelAdmin):
-    list_display = ('Name', 'slug')
+    list_display = ('name', 'slug')
