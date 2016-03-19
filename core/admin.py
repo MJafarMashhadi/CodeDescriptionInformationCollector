@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import *
 
-models = [XP, Badge, EarnBadge]
+models = [XP, EarnBadge]
 registration = map(admin.site.register, models)
 list(registration)  # apply, python 3 hack
 
@@ -68,3 +68,8 @@ class CommentAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(CommentAdmin, self).get_queryset(request)
         return qs.filter(skip=False)
+
+
+@admin.register(Badge)
+class BadgeAdmin(admin.ModelAdmin):
+    list_display = ('Name', 'slug')
