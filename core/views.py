@@ -155,6 +155,7 @@ def submit_snippet(request):
             comment.user = request.user
             comment.skip = True
             comment.save()
+            request.user.earn_xp(-1, 'Skipped {}'.format(snippet.name))
             if 'skips' not in request.session:
                 request.session['skips'] = 0
             request.session['skips'] += 1
@@ -168,6 +169,7 @@ def submit_snippet(request):
         comment.snippet = snippet
         comment.save()
         request.session['skips'] = 0
+        request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
         return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
     else:
         return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))
