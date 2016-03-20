@@ -124,11 +124,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return levels[self.level_int]
 
     def get_first_comment_date(self):
-        return Comment.objects.order_by('date_time')[:1].all()[0].date_time
+        return Comment.objects.filter(user=self).order_by('date_time')[:1].all()[0].date_time
 
     def get_last_comment_date(self):
-        return Comment.objects.order_by('-date_time')[:1].all()[0].date_time
-
+        return Comment.objects.filter(user=self).order_by('-date_time')[:1].all()[0].date_time
 
 
 class ProgrammingLanguage(models.Model):
