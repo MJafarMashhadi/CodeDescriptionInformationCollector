@@ -105,6 +105,11 @@ class Member(AbstractBaseUser, PermissionsMixin):
         )
 
     @property
+    def level_int(self):
+        # TODO: issue 16
+        return 0
+
+    @property
     def level(self):
         levels = [
             'Starting to see the light',
@@ -116,8 +121,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
             'Proficient code summarized',
             'Monster slayer'
         ]
-        # TODO: issue 16
-        return levels[0]
+        return levels[self.level_int]
 
     def get_first_comment_date(self):
         return Comment.objects.order_by('date_time')[:1].all()[0].date_time
