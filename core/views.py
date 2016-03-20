@@ -1,4 +1,5 @@
 import random
+from core.models import ProgrammingLanguage
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
@@ -7,9 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
-from .forms import RegistrationForm, ProgrammingLanguagesFormset, CommentForm, UserProfileForm, \
-    ChangeProgrammingLanguagesFormset
-from .models import Member, CodeSnippet, Comment
+from .forms import RegistrationForm, CommentForm, UserProfileForm
+from .forms import ProgrammingLanguagesFormset
+from .models import Member, CodeSnippet, Comment, UserKnowsPL
 
 THRESHOLD = 5
 MAX_SKIP = 4
@@ -41,18 +42,21 @@ def register(request):
 
     if request.method == 'POST':
         form = RegistrationForm(data=request.POST)
-        pls = ProgrammingLanguagesFormset(request.POST, instance=Member())
+        pls = ProgrammingLanguagesFormset(request.POST)
         if form.is_valid():
             new_member = form.save()
-            pls = ProgrammingLanguagesFormset(request.POST, instance=new_member)
+            pls = ProgrammingLanguagesFormset(request.POST)
             if pls.is_valid():
-                pls.save()
+                for form in pls:
+                    form.instance.user = new_member
+                    form.save()
                 return redirect('core:login')
             else:
                 new_member.delete()
     else:
         form = RegistrationForm()
-        pls = ProgrammingLanguagesFormset()
+        programming_languages = [{'language': item.pk, 'proficiency': 0} for item in ProgrammingLanguage.objects.all()]
+        pls = ProgrammingLanguagesFormset(initial=programming_languages)
 
     return render(request, 'auth/register.html', context={
         'register_form': form,
@@ -219,17 +223,30 @@ def show_random_snippet(request):
 def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(data=request.POST, instance=request.user)
-        pls = ChangeProgrammingLanguagesFormset(data=request.POST, instance=request.user)
+        pls = ProgrammingLanguagesFormset(data=request.POST)
         if form.is_valid() and pls.is_valid():
             form.save()
-            pls.save()
+            for form in pls:
+                form.instance.user = request.user
+                form.save()
     else:
         form = UserProfileForm(instance=request.user)
-        pls = ChangeProgrammingLanguagesFormset(instance=request.user)
+        user_proficiency = {}
+        for item in UserKnowsPL.objects.filter(user=request.user):
+            user_proficiency[item.language.pk] = item.proficiency
+
+        programming_languages = [
+            {
+                'language': item.pk,
+                'proficiency': 0 if item.pk not in user_proficiency else user_proficiency[item.pk]
+            } for item in ProgrammingLanguage.objects.all()
+        ]
+        print(programming_languages)
+        pls = ProgrammingLanguagesFormset(initial=programming_languages)
 
     context = {
         'profile_form': form,
-        'programming_languages_from': pls
+        'programming_languages': pls
     }
     context.update(_get_sidebar_context(request))
 

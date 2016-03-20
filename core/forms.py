@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
-from .models import Member, UserKnowsPL, Comment
-from django.forms import inlineformset_factory
+from django.contrib.auth.forms import UserCreationForm
+from .models import Member, Comment
+from .models import UserKnowsPL
+from django.forms import inlineformset_factory, formset_factory
 
 
 class RegistrationForm(UserCreationForm):
@@ -9,7 +10,7 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = Member
         fields = (
-            'email',
+            'username', 'email',
             'first_name', 'last_name', 'nickname',
             'academic_degree', 'experience',
             'industry_experience'
@@ -17,11 +18,22 @@ class RegistrationForm(UserCreationForm):
         help_texts = {
             'experience': 'in months',
             'industry_experience': 'in months',
+            'nickname': 'will be shown on your profile and in leader boards',
         }
 
-ProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=2, can_delete=False)
 
-ChangeProgrammingLanguagesFormset = inlineformset_factory(Member, UserKnowsPL, fields=('language', 'proficiency'), extra=1, can_delete=True)
+class ProgrammingLanguagesForm(forms.ModelForm):
+    class Meta:
+        model = UserKnowsPL
+        fields = ('language', 'proficiency')
+        widgets = {
+            'language': forms.HiddenInput()
+        }
+        labels = {
+            'proficiency': 'Experience'
+        }
+
+ProgrammingLanguagesFormset = formset_factory(ProgrammingLanguagesForm, can_delete=False, extra=0)
 
 
 class UserProfileForm(forms.ModelForm):

@@ -1,40 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap static gravatar %}
 {% block title %}Change profile | {{ request.user.get_short_name }}{% endblock %}
-{% block extra_js %}
-    <script type="text/javascript">
-        window.ratingOptions = {
-            size: 'xs', stars: 10,
-            min: 1, max: 10, step: 1,
-            showClear: false, showCaption: false
-        };
-    </script>
-
-    <script src="{% static 'jquery.formset.js' %}" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('.one_formset').formset({
-                addCssClass: 'btn btn-warning btn-lg add-button',
-                deleteCssClass: 'btn btn-error btn-lg remove-button',
-                prefix: '{{ programming_languages_from.prefix }}',
-                added: function (row) {
-                    $(row).find('input[type=number]').rating(ratingOptions);
-                }
-            });
-        });
-    </script>
-
-    <script src="{% static 'bootstrap-star-rating/js/star-rating.min.js' %}" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(function () {
-            $(".programming.languages input[type=number]").rating(ratingOptions);
-        });
-    </script>
-{% endblock %}
-{% block extra_css %}
-    <link href="{% static 'bootstrap-star-rating/css/star-rating.min.css' %}" media="all" rel="stylesheet"
-          type="text/css"/>
-{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -70,16 +36,16 @@
                     <div class="row">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <span>Programming languages that you know</span>
+                                <span>Your experience in programming languages</span>
                             </div>
                             <div class="panel-body">
                                 <div class="programming languages container-fluid">
-                                    {{ programming_languages_from.management_form }}
-                                    {% for form in programming_languages_from.forms %}
-                                        <div class="col-lg-6 one_formset">
-                                            <div class="panel panel-default">
-                                                <div class="panel-body">{{ form }}</div>
-                                            </div>
+                                    {{ programming_languages.management_form }}
+                                    {% for form in programming_languages.forms %}
+                                        <div class="form-group">
+                                            <p>Your months of experience in programming with <label>{{ form.language.value }}</label></p>
+                                            {{ form.language }}
+                                            {{ form.proficiency|bootstrap_inline }}
                                         </div>
                                     {% endfor %}
                                 </div>

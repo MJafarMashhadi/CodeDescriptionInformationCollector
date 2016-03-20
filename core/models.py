@@ -2,7 +2,6 @@ from django.core import validators
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin, _
 from django.utils import timezone
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class MemberManager(UserManager):
@@ -124,10 +123,16 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return levels[self.level_int]
 
     def get_first_comment_date(self):
-        return Comment.objects.filter(user=self).order_by('date_time')[:1].all()[0].date_time
+        comments = Comment.objects.filter(user=self).order_by('date_time')[:1].all()
+        if len(comments) == 0:
+            return None
+        return comments[0].date_time
 
     def get_last_comment_date(self):
-        return Comment.objects.filter(user=self).order_by('-date_time')[:1].all()[0].date_time
+        comments = Comment.objects.filter(user=self).order_by('-date_time')[:1].all()
+        if len(comments) == 0:
+            return None
+        return comments[0].date_time
 
 
 class ProgrammingLanguage(models.Model):
@@ -144,7 +149,7 @@ class ProgrammingLanguage(models.Model):
 class UserKnowsPL(models.Model):
     user = models.ForeignKey(Member)
     language = models.ForeignKey(ProgrammingLanguage)
-    proficiency = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    proficiency = models.PositiveIntegerField()
 
     def __str__(self):
         return self.language.name
