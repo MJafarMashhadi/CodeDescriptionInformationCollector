@@ -103,6 +103,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
             description=description
         )
 
+    def current_level_range(self):
+        # TODO: issue 16
+        return 0, 10e6
+
     @property
     def level_int(self):
         # TODO: issue 16

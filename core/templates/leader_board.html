@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load gravatar %}
+
+{% block body %}
+<div class="panel">
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li role="presentation"{% if not local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}">Global leaderboard</a></li>
+            <li role="presentation"{% if local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a></li>
+        </ul>
+        <div>
+            <table class="table table-hover table-striped">
+                <tr>
+                    <th>Nickname</th>
+                    <th>Level</th>
+                    <th>Score</th>
+                </tr>
+                {% for user in items %}
+                <tr>
+                    <td>
+                        <a href="{% url 'core:user_profile' username=user.username %}">
+                            <img src="{% gravatar_url user.email 30 %}" />
+                            <span>{% if user.nickname %}{{ user.nickname }}{% else %}{{ user.username }}{% endif %}</span>
+                        </a>
+                    </td>
+                    <td>{{ user.level }}</td>
+                    <td>{{ user.score }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

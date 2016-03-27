@@ -260,3 +260,17 @@ def user_profile(request, username):
         'user': user,
         'xp_points_history': xp_points_history,
     })
+
+
+def leader_board(request):
+    local = request.GET.get('local', '0') == 1
+    qs = Member.objects.order_by('-score')
+    if local:
+        qs = qs.filter(score__range=request.user.current_level_range())
+        items = qs[:3].all()
+    else:
+        items = qs[:10].all()
+    return render(request, 'leader_board.html', context={
+        'items': items,
+        'local': local,
+    })

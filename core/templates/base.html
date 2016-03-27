@@ -28,7 +28,7 @@
                 </li>
                 <li><a href="/">Home</a></li>
 {#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
-                <li><a href="{# TODO #}">Leader board</a></li>
+                <li><a href="{% url 'core:leaderboard' %}">Leader board</a></li>
                 {% if request.user.is_staff %}
                     <li><a href="{% url 'admin:index' %}">manage site</a></li>
                 {% endif %}

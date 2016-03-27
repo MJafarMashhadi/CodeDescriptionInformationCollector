@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^snippet/submit/$', 'core.views.submit_snippet', name='submit_snippet'),
     url(r'^snippet/(?P<name>[a-zA-Z0-9 *+-_]+)/$', 'core.views.show_snippet', name='show_snippet'),
     url(r'^snippet/$', 'core.views.show_random_snippet', name='random'),
+    url(r'^leaderboard/$', 'core.views.leader_board', name='leaderboard'),
     url(r'^/?$', 'core.views.home', name='home'),
 ]
