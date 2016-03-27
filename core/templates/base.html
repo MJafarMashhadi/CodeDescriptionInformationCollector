@@ -7,11 +7,37 @@
     <script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
+    <script type="text/javascript">
+        $(function () {
+            $('div[role=progressbar]').each(function (_) {
+                var $self = $(this);
+                min = $self.attr('aria-valuemin');
+                now = $self.attr('aria-valuenow');
+                max = $self.attr('aria-valuemax');
+
+                precent = 100 * (now - min) / (max - min);
+                $self.css('width', precent + '%');
+            });
+
+            $('#pts-to-level-up').each(function (_) {
+                var $self = $(this);
+                var $pg = $($self.data('progress-bar'));
+
+                now = $pg.attr('aria-valuenow');
+                max = $pg.attr('aria-valuemax');
+
+                $self.html((max - now) + ' points to level up');
+            })
+        });
+    </script>
     {% block extra_js %}{% endblock %}
     {% block extra_css %}{% endblock %}
     <style>
         body {
             padding-top: 70px;
+        }
+        .progress {
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -33,19 +59,27 @@
                     <li><a href="{% url 'admin:index' %}">manage site</a></li>
                 {% endif %}
             </ul>
-            <div class="nav navbar-nav navbar-right">
-                <div class="navbar-form">
-                    <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
+        {% endif %}
+        <div class="nav navbar-nav navbar-right">
+        {% if request.user.is_authenticated %}
+            <div style="display: inline-block; width: 300px; color: whitesmoke; vertical-align: middle">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ request.user.score }}" aria-valuemin="{{ request.user.current_level_range.0 }}" aria-valuemax="{{ request.user.current_level_range.1 }}">
+                        <span class="sr-only">{{ requser.user.level }}</span>
+                    </div>
                 </div>
+                <span id="pts-to-level-up" data-progress-bar=".progress-bar"></span>
+            </div>
+            <div class="navbar-form" style="display: inline-block">
+                <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
             </div>
         {% else %}
-            <div class="nav navbar-nav navbar-right">
-                <div class="navbar-form">
-                    <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
-                    <a href="{% url 'core:register' %}" class="btn">Register</a>
-                </div>
+            <div class="navbar-form">
+                <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
+                <a href="{% url 'core:register' %}" class="btn">Register</a>
             </div>
         {% endif %}
+        </div>
     </div>
 </nav>
 <div class="container">
