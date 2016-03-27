@@ -82,9 +82,31 @@ def _get_sidebar_context(request):
         if len(fewest_summaries) == 0:
             fewest_summaries = request.user.get_commentable_snippets_query_set().order_by('?').all()[:10]
 
+        virgin_high_scores = request.user.get_commentable_snippets_query_set()\
+            .annotate(n_comments_a=Count('usersViewed'))\
+            .filter(n_comments_a=0)\
+            .order_by('-score')\
+            .all()[:10]
+        non_virgin_high_scores = request.user.get_commentable_snippets_query_set()\
+            .annotate(n_comments_a=Count('usersViewed'))\
+            .filter(n_comments_a__gt=0)\
+            .order_by('-score')\
+            .all()[:10]
+
+        all_high_scores = dict()
+
+        for snippet in virgin_high_scores:
+            all_high_scores[snippet] = 2 * snippet.score, True
+
+        for snippet in non_virgin_high_scores:
+            all_high_scores[snippet] = snippet.score, False
+
+        all_high_scores = sorted(all_high_scores.items(), key=lambda a: -a[1][0])[:10]
+
         return {
             'programming_languages': programming_languages,
             'fewest_summaries': fewest_summaries,
+            'highest_scores': all_high_scores,
         }
     else:
         return dict()
