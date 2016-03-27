@@ -1,6 +1,7 @@
 import random
 from core.models import ProgrammingLanguage
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Count
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -70,20 +71,23 @@ def logout(request):
 
 
 def _get_sidebar_context(request):
-    all_snippets = CodeSnippet.objects.order_by('?').all()[:10]
     if request.user.is_authenticated():
-        # programming_languages = request.user.programming_languages.all()
-        commentable_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()[:10]
-        understandable_snippets = request.user.get_understandable_snippets_query_set().order_by('-date_time').all()[:10]
-    else:
-        programming_languages = commentable_snippets = understandable_snippets = None
+        programming_languages = request.user.get_knwon_programming_languages().all()
+        fewest_summaries = request.user.get_commentable_snippets_query_set()\
+            .annotate(n_comments_a=Count('usersViewed'))\
+            .filter(n_comments_a__gt=0)\
+            .order_by('n_comments_a')\
+            .all()[:10]
 
-    return {
-        'all_snippets': all_snippets,
-        # 'programming_languages': programming_languages,
-        'commentable_snippets': commentable_snippets,
-        'understandable_snippets': understandable_snippets,
-    }
+        if len(fewest_summaries) == 0:
+            fewest_summaries = request.user.get_commentable_snippets_query_set().order_by('?').all()[:10]
+
+        return {
+            'programming_languages': programming_languages,
+            'fewest_summaries': fewest_summaries,
+        }
+    else:
+        return dict()
 
 
 def home(request):

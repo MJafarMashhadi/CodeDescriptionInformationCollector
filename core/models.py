@@ -83,14 +83,13 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return ('%s %s' % (self.first_name, self.last_name)).strip()
 
-    def get_understandable_snippets_query_set(self):
-        return CodeSnippet.objects.select_related('language').filter(language__in=self.programming_languages.all())
+    def get_knwon_programming_languages(self):
+        return self.programming_languages.filter(userknowspl__proficiency__gt=0)
 
-    def get_understandable_snippets(self):
-        return self.get_understandable_snippets_query_set().all()
+    def get_understandable_snippets_query_set(self):
+        return CodeSnippet.objects.select_related('language').filter(language__in=self.get_knwon_programming_languages())
 
     def get_commentable_snippets_query_set(self):
-        # userComments = Comment.objects.filter(user=self)
         return self.get_understandable_snippets_query_set().exclude(usersViewed__exact=self)
 
     def get_commentable_snippets(self):

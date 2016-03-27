@@ -1,8 +1,6 @@
 {% if request.user.is_authenticated %}
     <div class="container-fluid">
-{#        <div class="row">{% include 'panel_programming_languages.html' %}</div>#}
-        <div class="row">{% include 'panels/panel_random_snippets.html' %}</div>
-        <div class="row">{% include 'panels/panel_knows_languages.html' %}</div>
-        <div class="row">{% include 'panels/panel_virgin_snippets.html' %}</div>
+        <div class="row">{% include 'panels/panel_programming_languages.html' %}</div>
+        <div class="row">{% include 'panels/panel_few_commented_snippets.html' %}</div>
     </div>
 {% endif %}
