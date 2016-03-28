@@ -1,6 +1,37 @@
 {% extends 'base.html' %}
 {% load bootstrap %}
-{% block header %}Code snippet | {{ snippet.name }}{% endblock %}
+{% block title %}Code snippet | {{ snippet.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.snippet-comment-count {
+    border-right: 120px solid transparent;
+    border-top: 120px solid #fa3455;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 41px;
+    left: 15px;
+    opacity: 0.4;
+
+    transition: ease-in 0.3s;
+    -moz-transition: ease-in 0.3s;
+    -o-transition: ease-in 0.3s;
+}
+
+.snippet-comment-count:hover {
+    opacity: 1;
+}
+
+.snippet-comment-count span {
+    position: relative;
+    top: -110px;
+    left: 5px;
+    color: whitesmoke;
+    font-weight: bold;
+}
+</style>
+{% endblock %}
 
 {% block extra_js %}
     <script type="text/javascript">
@@ -51,12 +82,22 @@
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
             <form action="{% url 'core:submit_snippet' %}" method="post">
-                <div class="panel panel-primary">
+                <div class="panel {% if snippet.is_starred %}panel-warning{% else %}panel-primary{% endif %}">
                     <div class="panel-heading">
                         <span>#{{ order }} {{ snippet.name }}</span>&nbsp;
                         <span class="label label-info">{{ snippet.language.name }}</span>
                     </div>
                     <div class="panel-body">
+                        <p class="snippet-comment-count"><span>
+                            {% with nc=snippet.n_comments %}
+                                {% if nc == 0 %}
+                                    DOUBLE SCORE!
+                                {% else %}
+                                    {{ nc }} comments
+                                {% endif %}
+                            {% endwith %}
+                        </span></p>
+
                         <p><strong>Read the following code carefully:</strong></p>
 
                         <pre>{{ snippet.code }}</pre>
