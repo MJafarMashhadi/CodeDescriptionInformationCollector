@@ -206,9 +206,10 @@ class XP(models.Model):
 
     def save(self, *args, **kwargs):
         super(XP, self).save(*args, **kwargs)
-        user = self.user
-        user.score += self.amount
-        user.save()
+        if not self.pk:
+            user = self.user
+            user.score += self.amount
+            user.save()
 
 
 class Badge(models.Model):
