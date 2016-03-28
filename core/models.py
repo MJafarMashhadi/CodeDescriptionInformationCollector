@@ -102,14 +102,27 @@ class Member(AbstractBaseUser, PermissionsMixin):
             description=description
         )
 
+    LEVEL_RANGES = (
+        (0, 20),
+        (20,60),
+        (60, 100),
+        (00, 150),
+        (50, 200),
+        (00, 260),
+        (60, 320),
+        (320, 400),
+    )
+
     def current_level_range(self):
-        # TODO: issue 16
-        return 0, 10e6
+        return self.LEVEL_RANGES[self.level_int]
 
     @property
     def level_int(self):
-        # TODO: issue 16
-        return 0
+        for i in range(len(self.LEVEL_RANGES)):
+            if self.LEVEL_RANGES[i][0] <= self.score < self.LEVEL_RANGES[i][1]:
+                return i
+
+        return len(self.LEVEL_RANGES)
 
     @property
     def level(self):
