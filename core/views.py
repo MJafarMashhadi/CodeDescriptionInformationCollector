@@ -136,6 +136,7 @@ def snippet_lang(request, language):
 
     context = {
         'snippet': snippet,
+        'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
         'order': order + 1,
         'comment_form': comment_form,
         'next_url': '{}?order={}'.format(request.path, order + 2),
@@ -159,6 +160,7 @@ def show_snippet(request, name):
 
     context = {
         'snippet': snippet,
+        'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
         'comment_form': comment_form,
         'skips': request.session.get('skips', 0),
         'available_skips': MAX_SKIP - request.session.get('skips', 0)
@@ -230,6 +232,7 @@ def show_random_snippet(request):
 
         context = {
             'snippet': snippet,
+            'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
             'comment_form': CommentForm(),
             'next_url': reverse('core:random'),
             'skips': request.session.get('skips', 0),
