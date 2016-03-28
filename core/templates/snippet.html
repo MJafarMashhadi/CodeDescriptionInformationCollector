@@ -79,6 +79,7 @@
     </script>
 {% endblock %}
 {% block body %}
+{% with nc=snippet.n_comments %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
             <form action="{% url 'core:submit_snippet' %}" method="post">
@@ -86,17 +87,11 @@
                     <div class="panel-heading">
                         <span>#{{ order }} {{ snippet.name }}</span>&nbsp;
                         <span class="label label-info">{{ snippet.language.name }}</span>
+                        {% if nc != 0 %}<span class="pull-right">{{ nc }} comment{{ nc|pluralize }}</span>{% endif %}
                     </div>
+
                     <div class="panel-body">
-                        <p class="snippet-comment-count"><span>
-                            {% with nc=snippet.n_comments %}
-                                {% if nc == 0 %}
-                                    DOUBLE SCORE!
-                                {% else %}
-                                    {{ nc }} comments
-                                {% endif %}
-                            {% endwith %}
-                        </span></p>
+                        {% if nc == 0 %}<p class="snippet-comment-count"><span>DOUBLE SCORE!</span></p>{% endif %}
 
                         <p><strong>Read the following code carefully:</strong></p>
 
@@ -133,4 +128,5 @@
             {% include 'side_info.html' %}
         </div>
     </div>
+{% endwith %}
 {% endblock %}
