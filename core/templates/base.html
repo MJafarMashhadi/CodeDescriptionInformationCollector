@@ -6,7 +6,11 @@
     <title>{% block title %}{% endblock %}</title>
     <script type="text/javascript" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-material-design/dist/js/ripples.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-material-design/dist/js/material.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'bootstrap-material-design/dist/css/bootstrap-material-design.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'bootstrap-material-design/dist/css/ripples.min.css' %}"/>
     <script type="text/javascript">
         $(function () {
             $('div[role=progressbar]').each(function (_) {
@@ -27,17 +31,22 @@
                 max = $pg.attr('aria-valuemax');
 
                 $self.html((max - now) + ' points to level up');
-            })
+            });
+
+            $.material.init();
         });
     </script>
     {% block extra_js %}{% endblock %}
     {% block extra_css %}{% endblock %}
     <style>
         body {
-            padding-top: 70px;
+            padding-top: 80px;
         }
         .progress {
             margin-bottom: 0;
+        }
+        .nav-tabs .active {
+            background-color: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -46,7 +55,7 @@
     <div class="container-fluid">
         {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
-                <li style="margin-top: 6px;">
+                <li style="margin-top: 10px;">
                     <a style="padding: 0;" href="{% url 'core:user_profile' username=request.user.username %}">
                         <img style="border-radius: 50%;" src="{% gravatar_url request.user.email 40 %}" />
                         <strong>{{ request.user.get_short_name }}</strong>
@@ -70,11 +79,13 @@
                 </div>
                 <span id="pts-to-level-up" data-progress-bar=".progress-bar"></span>
             </div>
-            <div class="navbar-form" style="display: inline-block">
+{#            <div class="navbar-form" style="display: inline-block">#}
+            <div style="display: inline-block">
                 <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
             </div>
         {% else %}
-            <div class="navbar-form">
+{#            <div class="navbar-form">#}
+            <div>
                 <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
                 <a href="{% url 'core:register' %}" class="btn">Register</a>
             </div>

@@ -2,12 +2,18 @@
 {% load gravatar %}
 
 {% block body %}
+
+<ul class="nav nav-tabs">
+    <li role="presentation"{% if not local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}">Global leaderboard</a></li>
+    <li role="presentation"{% if local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a></li>
+</ul>
 <div class="panel">
     <div class="panel-body">
-        <ul class="nav nav-tabs">
-            <li role="presentation"{% if not local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}">Global leaderboard</a></li>
-            <li role="presentation"{% if local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a></li>
-        </ul>
+        {% if local %}
+        <p class="alert alert-info">
+            Top 3 people that have almost the same amount of experience that you have.
+        </p>
+        {% endif %}
         <div>
             <table class="table table-hover table-striped">
                 <tr>
