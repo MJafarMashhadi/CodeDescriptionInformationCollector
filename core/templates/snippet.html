@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% load bootstrap %}
+{% load static bootstrap %}
 {% block title %}Code snippet | {{ snippet.name }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'prism.css' %}" />
 <style>
 .snippet-comment-count {
     border-right: 120px solid transparent;
@@ -39,6 +40,7 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script type="text/javascript" src="{% static 'prism.js' %}"></script>
     <script type="text/javascript">
         $(function () {
             var $wordCount = $('#word_count');
@@ -102,7 +104,7 @@
                         </p>
                         <p><strong>Read the following code carefully:</strong></p>
 
-                        <pre>{{ snippet.code }}</pre>
+                        <pre class="language-{% if snippet.language.name == 'java' %}java{% else %}clike{% endif %}"><code>{{ snippet.code }}</code></pre>
 
                         <p><strong>What does this code do?</strong></p>
 
