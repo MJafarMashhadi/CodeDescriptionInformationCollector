@@ -218,11 +218,11 @@ class XP(models.Model):
     description = models.CharField(max_length=200)
 
     def save(self, *args, **kwargs):
-        super(XP, self).save(*args, **kwargs)
         if not self.pk:
             user = self.user
             user.score += self.amount
             user.save()
+        super(XP, self).save(*args, **kwargs)
 
 
 class Badge(models.Model):
