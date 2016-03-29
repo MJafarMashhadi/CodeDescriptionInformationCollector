@@ -193,10 +193,11 @@ def submit_snippet(request):
             if 'skips' not in request.session:
                 request.session['skips'] = 0
             request.session['skips'] += 1
+            request.session['snippet_id'] = None
 
             return redirect('core:random')
         else:
-            return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))
+            return redirect('core:random')
     elif comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
@@ -207,17 +208,20 @@ def submit_snippet(request):
             request.user.earn_xp(2 * snippet.score, 'Summarized {} for the first time (Double score)'.format(snippet.name))
         else:
             request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
+
+        request.session['snippet_id'] = None
         return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
     else:
-        return HttpResponseRedirect(reverse('core:random') + '?id=' + str(snippet.pk))
+        return redirect('core:random')
 
 
 @login_required
 def show_random_snippet(request):
     snippet = None
-    if 'id' in request.GET:
+    last_snippet_id = request.session.get('snippet_id', None)
+    if last_snippet_id:
         try:
-            snippet = CodeSnippet.get(pk=request.GET['id'])
+            snippet = CodeSnippet.objects.get(pk=last_snippet_id)
         except CodeSnippet.DoesNotExist:
             pass
     try:
@@ -229,6 +233,7 @@ def show_random_snippet(request):
                 better_snippets = available_snippets
 
             snippet = random.choice(better_snippets)
+            request.session['snippet_id'] = snippet.pk
 
         context = {
             'snippet': snippet,
