@@ -30,6 +30,11 @@
     color: whitesmoke;
     font-weight: bold;
 }
+
+.bg-info {
+    padding: 15px;
+    margin: -15px -15px 15px -15px;
+}
 </style>
 {% endblock %}
 
@@ -92,7 +97,9 @@
 
                     <div class="panel-body">
                         {% if nc == 0 %}<p class="snippet-comment-count"><span>DOUBLE SCORE!</span></p>{% endif %}
-
+                        <p class="bg-info">
+                            You may get a minimum of <strong>{{ snippet_score }}xp points</strong> for summarizing this method!
+                        </p>
                         <p><strong>Read the following code carefully:</strong></p>
 
                         <pre>{{ snippet.code }}</pre>
@@ -111,10 +118,6 @@
 
                         <p id="word_count_warning" class="text-danger">
                             This seems to be a long summary!
-                        </p>
-
-                        <p>
-                            You may get a minimum of {{ snippet_score }}xp points for summarizing this method!
                         </p>
                     </div>
                     <div class="panel-footer">
