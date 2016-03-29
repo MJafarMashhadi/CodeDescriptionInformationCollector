@@ -6,13 +6,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'prism.css' %}" />
 <style>
 .snippet-comment-count {
-    border-right: 120px solid transparent;
-    border-top: 120px solid #fa3455;
+    border-left: 110px solid transparent;
+    border-top: 110px solid #fa3455;
     width: 0;
     height: 0;
     position: absolute;
     top: 41px;
-    left: 15px;
+    right: 15px;
     opacity: 0.4;
 
     transition: ease-in 0.3s;
@@ -26,10 +26,11 @@
 
 .snippet-comment-count span {
     position: relative;
-    top: -110px;
-    left: 5px;
+    top: -100px;
+    left: -63px;
     color: whitesmoke;
     font-weight: bold;
+    text-align: right;
 }
 
 .bg-info {
