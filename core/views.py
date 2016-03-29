@@ -295,7 +295,8 @@ def leader_board(request):
     local = request.GET.get('local', '0') == 1
     qs = Member.objects.order_by('-score')
     if local:
-        qs = qs.filter(score__range=request.user.current_level_range())
+        exp = (request.user.experience / 6) * 6
+        qs = qs.filter(experience__range=(exp, exp+6))
         items = qs[:3].all()
     else:
         items = qs[:10].all()
