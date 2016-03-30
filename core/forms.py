@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import formset_factory
+
 from .models import Member, Comment
 from .models import UserKnowsPL
-from django.forms import inlineformset_factory, formset_factory
 
 
 class RegistrationForm(UserCreationForm):

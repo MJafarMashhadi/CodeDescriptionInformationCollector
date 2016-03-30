@@ -258,11 +258,14 @@ def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(data=request.POST, instance=request.user)
         pls = ProgrammingLanguagesFormset(data=request.POST)
+        UserKnowsPL.objects.filter(user=request.user).delete()
         if form.is_valid() and pls.is_valid():
             form.save()
-            for form in pls:
-                form.instance.user = request.user
-                form.save()
+            user_pl = []
+            for f in pls:
+                f.instance.user = request.user
+                user_pl.append(f.save(commit=False))
+            UserKnowsPL.objects.bulk_create(user_pl)
     else:
         form = UserProfileForm(instance=request.user)
         user_proficiency = {}
