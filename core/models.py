@@ -129,7 +129,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         levels = [
             'Starting to see the light',
             'Taking your first steps',
-            '???? player',
+            'Good job! Keep on',
             'Middle of the way',
             'Code squasher',
             'Point warm',
