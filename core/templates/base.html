@@ -18,7 +18,10 @@
                 min = $self.attr('aria-valuemin');
                 now = $self.attr('aria-valuenow');
                 max = $self.attr('aria-valuemax');
-
+                if (max == "inf") {
+                    $self.parent().parent().hide();
+                    return;
+                }
                 precent = 100 * (now - min) / (max - min);
                 $self.css('width', precent + '%');
             });
@@ -30,6 +33,8 @@
                 now = $pg.attr('aria-valuenow');
                 max = $pg.attr('aria-valuemax');
 
+                if (max == "inf")
+                    return;
                 $self.html((max - now) + ' points to level up (next: <em>{{ request.user.next_level }}</em>)');
             });
 

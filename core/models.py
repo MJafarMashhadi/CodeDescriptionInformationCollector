@@ -106,14 +106,14 @@ class Member(AbstractBaseUser, PermissionsMixin):
         )
 
     LEVEL_RANGES = (
-        (0, 20),
+        (float('-inf'), 20),
         (20, 60),
         (60, 100),
         (00, 150),
         (50, 200),
         (00, 260),
         (60, 320),
-        (320, 400),
+        (320, float('inf')),
     )
 
     LEVELS = [
@@ -156,7 +156,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     @property
     def next_level(self):
         i = self.level_int
-        if i == len(self.LEVELS) - 1:
+        if i >= len(self.LEVELS) - 2:
             return ''
         else:
             return self.LEVELS[i + 1]

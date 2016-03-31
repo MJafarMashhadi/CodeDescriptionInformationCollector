@@ -255,8 +255,6 @@ def show_random_snippet(request):
             if len(better_snippets) == 0:
                 better_snippets = available_snippets
 
-            print(available_snippets)
-
             snippet = random.choice(better_snippets)
             request.session['snippet_id'] = snippet.pk
 
@@ -306,7 +304,6 @@ def profile(request):
         print(programming_languages)
         pls = ProgrammingLanguagesFormset(initial=programming_languages)
 
-    print(pls.forms)
     context = {
         'profile_form': form,
         'programming_languages_form': pls
