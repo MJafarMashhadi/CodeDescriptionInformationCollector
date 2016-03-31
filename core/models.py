@@ -135,6 +135,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
         return len(self.LEVEL_RANGES)
 
+    def can_submit_code(self):
+        return self.level_int >= 4 or self.is_staff or self.is_superuser
+
     @property
     def level(self):
         return self.LEVELS[self.level_int]
@@ -199,6 +202,8 @@ class CodeSnippet(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
     score = models.PositiveIntegerField(default=5)
     is_starred = models.BooleanField(default=False)
+    approved = models.BooleanField(default=True)
+    submitter = models.ForeignKey(Member, null=False, blank=False)
 
     usersViewed = models.ManyToManyField(Member, through='Comment', related_name='comments')
 

@@ -7,10 +7,9 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect, HttpResponseBadRequest
+from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.shortcuts import render, get_object_or_404
-from .forms import RegistrationForm, CommentForm, UserProfileForm
-from .forms import ProgrammingLanguagesFormset
+from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm
 from .models import Member, CodeSnippet, Comment, UserKnowsPL
 
 THRESHOLD = 5
@@ -214,6 +213,28 @@ def submit_snippet(request):
     else:
         return redirect('core:random')
 
+
+@login_required
+def submit_new_snippet(request):
+    if not request.user.can_submit_code():
+        raise Http404()
+    if request.method == 'POST':
+        form = CodeSnippetSubmitForm(request.POST)
+        if form.is_valid():
+            snippet = form.save(commit=False)
+            snippet.approved = False
+            snippet.submitter = request.user
+            snippet.save()
+    else:
+        form = CodeSnippetSubmitForm()
+
+    context = {
+        'form': form,
+    }
+
+    context.update(_get_sidebar_context(request))
+
+    return render(request, 'submit_snippet.html', context=context)
 
 @login_required
 def show_random_snippet(request):

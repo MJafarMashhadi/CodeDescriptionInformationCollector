@@ -2,8 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import formset_factory
 
-from .models import Member, Comment
-from .models import UserKnowsPL
+from .models import Member, Comment, UserKnowsPL, CodeSnippet
 
 
 class RegistrationForm(UserCreationForm):
@@ -62,3 +61,9 @@ class CommentForm(forms.ModelForm):
                 'rows': 2,
             })
         }
+
+class CodeSnippetSubmitForm(forms.ModelForm):
+
+    class Meta:
+        model = CodeSnippet
+        exclude = ('date_time', 'approved', 'submitter', 'usersViewed')

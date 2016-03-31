@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static bootstrap %}
+{% block title %}Code snippet | Submit New{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+            <form action="{% url 'core:submit_snippet' %}" method="post">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span>Add a new snippet</span>
+                    </div>
+
+                    <div class="panel-body">
+
+                        {% csrf_token %}
+                        {{ form|bootstrap }}
+
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs hidden-print">
+            {% include 'side_info.html' %}
+        </div>
+    </div>
+{% endblock %}

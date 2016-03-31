@@ -63,9 +63,12 @@
                 </li>
                 <li><a href="/">Home</a></li>
 {#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
-                <li><a href="{% url 'core:leaderboard' %}">Leader board</a></li>
+                <li><a href="{% url 'core:leaderboard' %}">Leader Board</a></li>
+                {% if request.user.can_submit_code %}
+                <li><a href="{% url 'core:submit_code' %}">Submit Code</a></li>
+                {% endif %}
                 {% if request.user.is_staff %}
-                    <li><a href="{% url 'admin:index' %}">manage site</a></li>
+                    <li><a href="{% url 'admin:index' %}">Manage Site</a></li>
                 {% endif %}
             </ul>
         {% endif %}
