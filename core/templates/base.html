@@ -30,7 +30,7 @@
                 now = $pg.attr('aria-valuenow');
                 max = $pg.attr('aria-valuemax');
 
-                $self.html((max - now) + ' points to level up');
+                $self.html((max - now) + ' points to level up (next: <em>{{ request.user.next_level }}</em>)');
             });
 
             $.material.init();
@@ -71,11 +71,10 @@
         {% endif %}
         <div class="nav navbar-nav navbar-right">
         {% if request.user.is_authenticated %}
+            <span style="margin-right: 30px" class="hide-sm hide-xs"><em>{{ request.user.level }}</em></span>
             <div style="display: inline-block; width: 300px; color: whitesmoke; vertical-align: middle">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ request.user.score }}" aria-valuemin="{{ request.user.current_level_range.0 }}" aria-valuemax="{{ request.user.current_level_range.1 }}">
-                        <span class="sr-only">{{ requser.user.level }}</span>
-                    </div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ request.user.score }}" aria-valuemin="{{ request.user.current_level_range.0 }}" aria-valuemax="{{ request.user.current_level_range.1 }}"></div>
                 </div>
                 <span id="pts-to-level-up" data-progress-bar=".progress-bar"></span>
             </div>

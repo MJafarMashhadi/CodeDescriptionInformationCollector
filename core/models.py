@@ -104,7 +104,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     LEVEL_RANGES = (
         (0, 20),
-        (20,60),
+        (20, 60),
         (60, 100),
         (00, 150),
         (50, 200),
@@ -112,6 +112,17 @@ class Member(AbstractBaseUser, PermissionsMixin):
         (60, 320),
         (320, 400),
     )
+
+    LEVELS = [
+        'Starting to see the light',
+        'Taking your first steps',
+        'Good job! Keep on',
+        'Middle of the way',
+        'Code squasher',
+        'Point warm',
+        'Proficient code summarized',
+        'Monster slayer'
+    ]
 
     def current_level_range(self):
         return self.LEVEL_RANGES[self.level_int]
@@ -126,17 +137,23 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     @property
     def level(self):
-        levels = [
-            'Starting to see the light',
-            'Taking your first steps',
-            'Good job! Keep on',
-            'Middle of the way',
-            'Code squasher',
-            'Point warm',
-            'Proficient code summarized',
-            'Monster slayer'
-        ]
-        return levels[self.level_int]
+        return self.LEVELS[self.level_int]
+
+    @property
+    def previous_level(self):
+        i = self.level_int
+        if i == 0:
+            return ''
+        else:
+            return self.LEVELS[i-1]
+
+    @property
+    def next_level(self):
+        i = self.level_int
+        if i == len(self.LEVELS)-1:
+            return ''
+        else:
+            return self.LEVELS[i+1]
 
     def get_first_comment_date(self):
         comments = Comment.objects.filter(user=self).order_by('date_time')[:1].all()
