@@ -33,9 +33,9 @@
                 now = $pg.attr('aria-valuenow');
                 max = $pg.attr('aria-valuemax');
 
-                if (max == "inf")
-                    return;
-                $self.html((max - now) + ' points to level up (next: <em>{{ request.user.next_level }}</em>)');
+                if (max != "inf") {
+                    $self.html((max - now) + ' points to <em>{{ request.user.next_level }}</em>');
+                }
             });
 
             $.material.init();
