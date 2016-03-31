@@ -6,7 +6,7 @@
     <ul class="list-group">
         {% for snippet in fewest_summaries %}
             <li class="list-group-item">
-                <a href="{% url 'core:show_snippet' name=snippet.name %}">{{ snippet.name }}</a>
+                <a href="{% url 'core:show_snippet' language=snippet.language.name name=snippet.name %}">{{ snippet.name }}</a>
                 <span class="label label-info">{{ snippet.language.name }}</span>
             </li>
         {% endfor %}

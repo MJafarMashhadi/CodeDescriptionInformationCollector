@@ -14,7 +14,7 @@
         {% for snippet_score in highest_scores %}
             {% with snippet=snippet_score.0 score=snippet_score.1 %}
             <tr>
-                <td><span class="label label-info">{{ snippet.language.name }}</span><a href="{% url 'core:show_snippet' name=snippet.name %}">{{ snippet.name }}</a></td>
+                <td><span class="label label-info">{{ snippet.language.name }}</span><a href="{% url 'core:show_snippet' language=snippet.language.name name=snippet.name %}">{{ snippet.name }}</a></td>
                 <td>{{ score.0 }}{% if score.1 %}<span class="label label-danger">doubled</span>{% endif %}</td>
             </tr>
             {% endwith %}

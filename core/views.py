@@ -72,25 +72,25 @@ def logout(request):
 def _get_sidebar_context(request):
     if request.user.is_authenticated():
         programming_languages = request.user.get_knwon_programming_languages().all()
-        fewest_summaries = request.user.get_commentable_snippets_query_set()\
-            .annotate(n_comments_a=Count('usersViewed'))\
-            .filter(n_comments_a__gt=0)\
-            .order_by('n_comments_a')\
-            .all()[:10]
+        fewest_summaries = request.user.get_commentable_snippets_query_set() \
+                               .annotate(n_comments_a=Count('usersViewed')) \
+                               .filter(n_comments_a__gt=0) \
+                               .order_by('n_comments_a') \
+                               .all()[:10]
 
         if len(fewest_summaries) == 0:
             fewest_summaries = request.user.get_commentable_snippets_query_set().order_by('?').all()[:10]
 
-        virgin_high_scores = request.user.get_commentable_snippets_query_set()\
-            .annotate(n_comments_a=Count('usersViewed'))\
-            .filter(n_comments_a=0)\
-            .order_by('-score')\
-            .all()[:10]
-        non_virgin_high_scores = request.user.get_commentable_snippets_query_set()\
-            .annotate(n_comments_a=Count('usersViewed'))\
-            .filter(n_comments_a__gt=0)\
-            .order_by('-score')\
-            .all()[:10]
+        virgin_high_scores = request.user.get_commentable_snippets_query_set() \
+                                 .annotate(n_comments_a=Count('usersViewed')) \
+                                 .filter(n_comments_a=0) \
+                                 .order_by('-score') \
+                                 .all()[:10]
+        non_virgin_high_scores = request.user.get_commentable_snippets_query_set() \
+                                     .annotate(n_comments_a=Count('usersViewed')) \
+                                     .filter(n_comments_a__gt=0) \
+                                     .order_by('-score') \
+                                     .all()[:10]
 
         all_high_scores = dict()
 
@@ -148,8 +148,8 @@ def snippet_lang(request, language):
 
 
 @login_required
-def show_snippet(request, name):
-    snippet = get_object_or_404(CodeSnippet, name=name)
+def show_snippet(request, language, name):
+    snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
     try:
         prev_comment = Comment.objects.get(user=request.user, snippet=snippet)
@@ -204,7 +204,8 @@ def submit_snippet(request):
         comment.save()
         request.session['skips'] = 0
         if is_virgin:
-            request.user.earn_xp(2 * snippet.score, 'Summarized {} for the first time (Double score)'.format(snippet.name))
+            request.user.earn_xp(2 * snippet.score,
+                                 'Summarized {} for the first time (Double score)'.format(snippet.name))
         else:
             request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
 
@@ -236,6 +237,7 @@ def submit_new_snippet(request):
 
     return render(request, 'submit_snippet.html', context=context)
 
+
 @login_required
 def show_random_snippet(request):
     snippet = None
@@ -252,6 +254,8 @@ def show_random_snippet(request):
 
             if len(better_snippets) == 0:
                 better_snippets = available_snippets
+
+            print(available_snippets)
 
             snippet = random.choice(better_snippets)
             request.session['snippet_id'] = snippet.pk
@@ -298,13 +302,14 @@ def profile(request):
                 'language': item.pk,
                 'proficiency': 0 if item.pk not in user_proficiency else user_proficiency[item.pk]
             } for item in ProgrammingLanguage.objects.all()
-        ]
+            ]
         print(programming_languages)
         pls = ProgrammingLanguagesFormset(initial=programming_languages)
 
+    print(pls.forms)
     context = {
         'profile_form': form,
-        'programming_languages': pls
+        'programming_languages_form': pls
     }
     context.update(_get_sidebar_context(request))
 
@@ -325,7 +330,7 @@ def leader_board(request):
     qs = Member.objects.order_by('-score')
     if local:
         exp = (request.user.experience / 6) * 6
-        qs = qs.filter(experience__range=(exp, exp+6))
+        qs = qs.filter(experience__range=(exp, exp + 6))
         items = qs[:3].all()
     else:
         items = qs[:10].all()

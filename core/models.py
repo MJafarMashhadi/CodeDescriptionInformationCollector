@@ -8,6 +8,7 @@ class MemberManager(UserManager):
     """
     Manager class for customized Member class
     """
+
     def _create_user(self, email, password,
                      is_staff, is_superuser, **extra_fields):
         """
@@ -40,30 +41,31 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     """
     username = models.CharField(_('username'), max_length=30, unique=True,
-        help_text=_('Required. 30 characters or fewer. Letters, digits and '
-                    '-/./_ only.'),
-        validators=[
-            validators.RegexValidator(r'^[\w.-]+$',
-                                      _('Enter a valid username. '
-                                        'This value may contain only letters, numbers '
-                                        'and -/./_ characters.'), 'invalid'),
-        ],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        })
+                                help_text=_('Required. 30 characters or fewer. Letters, digits and '
+                                            '-/./_ only.'),
+                                validators=[
+                                    validators.RegexValidator(r'^[\w.-]+$',
+                                                              _('Enter a valid username. '
+                                                                'This value may contain only letters, numbers '
+                                                                'and -/./_ characters.'), 'invalid'),
+                                ],
+                                error_messages={
+                                    'unique': _("A user with that username already exists."),
+                                })
     email = models.EmailField(_('email address'), blank=True, primary_key=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     nickname = models.CharField('Nickname', max_length=30, blank=True)
 
-    academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'),('U', 'Undergraduate')))
+    academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'), ('U', 'Undergraduate')))
     experience = models.SmallIntegerField(default=0)
     industry_experience = models.PositiveIntegerField(default=0)
 
     is_staff = models.BooleanField(_('staff status'), default=False,
-        help_text=_('Designates whether the user can log into this admin site.'))
+                                   help_text=_('Designates whether the user can log into this admin site.'))
     is_active = models.BooleanField(_('active'), default=True,
-        help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
+                                    help_text=_(
+                                        'Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     programming_languages = models.ManyToManyField('ProgrammingLanguage', through='UserKnowsPL')
@@ -87,7 +89,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return self.programming_languages.filter(userknowspl__proficiency__gt=0)
 
     def get_understandable_snippets_query_set(self):
-        return CodeSnippet.objects.select_related('language').filter(language__in=self.get_knwon_programming_languages())
+        return CodeSnippet.objects.select_related('language').filter(
+            language__in=self.get_knwon_programming_languages())
 
     def get_commentable_snippets_query_set(self):
         return self.get_understandable_snippets_query_set().exclude(usersViewed__exact=self)
@@ -148,15 +151,15 @@ class Member(AbstractBaseUser, PermissionsMixin):
         if i == 0:
             return ''
         else:
-            return self.LEVELS[i-1]
+            return self.LEVELS[i - 1]
 
     @property
     def next_level(self):
         i = self.level_int
-        if i == len(self.LEVELS)-1:
+        if i == len(self.LEVELS) - 1:
             return ''
         else:
-            return self.LEVELS[i+1]
+            return self.LEVELS[i + 1]
 
     def get_first_comment_date(self):
         comments = Comment.objects.filter(user=self).order_by('date_time')[:1].all()
@@ -206,6 +209,9 @@ class CodeSnippet(models.Model):
     submitter = models.ForeignKey(Member, null=False, blank=False)
 
     usersViewed = models.ManyToManyField(Member, through='Comment', related_name='comments')
+
+    class Meta:
+        unique_together = ('name', 'language')
 
     @property
     def n_comments(self):
