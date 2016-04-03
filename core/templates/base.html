@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'bootstrap-material-design/dist/css/bootstrap-material-design.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'bootstrap-material-design/dist/css/ripples.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}"/>
     <script type="text/javascript">
         $(function () {
             $('div[role=progressbar]').each(function (_) {
@@ -42,6 +43,19 @@
                 }
             });
 
+            $('nav ul.nav li').each(function (_) {
+                $self = $(this);
+                $link = $self.children('a');
+                href = $link.attr('href');
+                var title = $link.attr('title');
+
+                if (window.location.pathname == href) {
+                    $self.addClass('active').addClass('selected');
+{#                    $link.append('<span>' + title + '</span>')#}
+                }
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
             $.material.init();
         });
     </script>
@@ -71,15 +85,15 @@
                     </a>
                 </li>
 {#                <li><a href="/">Home</a></li>#}
-                <li><a href="{% url 'core:random' %}">Summarizing</a></li>
-                <li><a href="{# TODO: Amin #}">Evaluating</a></li>
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:random' %}" data-toggle="tooltip" data-placement="bottom" title="Summarizing"><i class="fa fa-2x fa-terminal"></i></a></li>
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{# TODO: Amin #}" data-toggle="tooltip" data-placement="bottom" title="Evaluating"><i class="fa fa-2x fa-list-alt"></i></a></li>
 {#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
-                <li><a href="{% url 'core:leaderboard' %}">Leader Board</a></li>
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:leaderboard' %}" data-toggle="tooltip" data-placement="bottom" title="Leaderboard"><i class="fa fa-2x fa-trophy"></i></a></li>
                 {% if request.user.can_submit_code %}
-                <li><a href="{% url 'core:submit_code' %}">Submit Code</a></li>
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:submit_code' %}" data-toggle="tooltip" data-placement="bottom" title="Submit code"><i class="fa fa-2x fa-upload"></i></a></li>
                 {% endif %}
                 {% if request.user.is_staff %}
-                    <li><a href="{% url 'admin:index' %}">Manage Site</a></li>
+                    <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'admin:index' %}" data-toggle="tooltip" data-placement="bottom" title="Manage Site"><i class="fa fa-2x fa-tachometer"></i></a></li>
                 {% endif %}
             </ul>
         {% endif %}
