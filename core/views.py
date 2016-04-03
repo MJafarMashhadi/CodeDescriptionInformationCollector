@@ -122,7 +122,7 @@ def home(request):
 def snippet_lang(request, language):
     order = int(request.GET.get('order', 1)) - 1
     try:
-        snippet = CodeSnippet.objects.filter(language__name__iexact=language).order_by('-date_time').all()[
+        snippet = CodeSnippet.objects.filter(language__name__iexact=language, approved=True).order_by('-date_time').all()[
                   order:1 + order].get()
     except CodeSnippet.DoesNotExist:
         context = {'language': language, 'finished': order != 1}
@@ -221,6 +221,7 @@ def submit_snippet(request):
 def submit_new_snippet(request):
     if not request.user.can_submit_code():
         raise Http404()
+    saved = False
     if request.method == 'POST':
         form = CodeSnippetSubmitForm(request.POST)
         if form.is_valid():
@@ -228,11 +229,14 @@ def submit_new_snippet(request):
             snippet.approved = False
             snippet.submitter = request.user
             snippet.save()
+
+            saved = True
     else:
         form = CodeSnippetSubmitForm()
 
     context = {
         'form': form,
+        'saved': saved,
     }
 
     context.update(_get_sidebar_context(request))

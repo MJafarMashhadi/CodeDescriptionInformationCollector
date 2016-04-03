@@ -5,6 +5,11 @@
 {% block body %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+            {% if saved %}
+                <h4>Thanks for submitting your code snippet!</h4>
+                <p>This snippet will be available for summarising after moderation evaluation and scoring.</p>
+                <p><a href="{% url 'core:submit_code' %}">Submit another one</a></p>
+            {% else %}
             <form action="{% url 'core:submit_code' %}" method="post">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -22,6 +27,7 @@
                     </div>
                 </div>
             </form>
+            {% endif %}
         </div>
         <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs hidden-print">
             {% include 'side_info.html' %}

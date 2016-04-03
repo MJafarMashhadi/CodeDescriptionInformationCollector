@@ -66,4 +66,4 @@ class CodeSnippetSubmitForm(forms.ModelForm):
 
     class Meta:
         model = CodeSnippet
-        exclude = ('date_time', 'approved', 'submitter', 'usersViewed')
+        exclude = ('date_time', 'approved', 'submitter', 'usersViewed', 'score', 'is_starred')

@@ -90,7 +90,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     def get_understandable_snippets_query_set(self):
         return CodeSnippet.objects.select_related('language').filter(
-            language__in=self.get_knwon_programming_languages())
+            language__in=self.get_knwon_programming_languages(), approved=True)
 
     def get_commentable_snippets_query_set(self):
         return self.get_understandable_snippets_query_set().exclude(usersViewed__exact=self)
