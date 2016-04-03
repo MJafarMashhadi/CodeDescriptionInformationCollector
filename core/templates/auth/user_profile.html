@@ -31,11 +31,6 @@ img.avatar {
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="container-fluid">
-            <div class="col-lg-2 col-lg-offset-10">
-                {% if request.user.pk == user.pk %}
-                    <a href="{% url 'core:profile' %}" class="btn btn-default pull-right">Edit</a>
-                {% endif %}
-            </div>
             <div class="col-lg-2">
                 <div class="avatar"><img class="avatar" style="border-radius: 50%;" src="{% gravatar_url user.email 128 %}" /></div>
                 <p class="nickname">{{ user.nickname }}</p>
@@ -57,6 +52,16 @@ img.avatar {
                     <tr>
                         <th>Level</th>
                         <td>{{ user.level }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div style="display: inline-block; width: 100%;">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ user.score }}" aria-valuemin="{{ user.current_level_range.0 }}" aria-valuemax="{{ user.current_level_range.1 }}"></div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th>XP</th>
@@ -97,5 +102,12 @@ img.avatar {
             </div>
         </div>
     </div>
+
+    {% if request.user.pk == user.pk %}
+    <div class="panel-footer">
+        <a href="{% url 'core:profile' %}" class="btn btn-warning btn-raised pull-right">Edit Profile</a>
+        <div class="clearfix"></div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
