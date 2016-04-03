@@ -49,12 +49,14 @@ class MemberAdmin(admin.ModelAdmin):
 
 @admin.register(CodeSnippet)
 class CodeSnippetAdmin(admin.ModelAdmin):
-    list_display = ('language', 'name', 'score', 'is_starred')
+    list_display = ('language', 'name', 'score', 'is_starred', 'submitter')
     fields = (
         ('name', 'language'),
         ('score', 'is_starred'),
+        ('approved', 'submitter'),
         'code'
     )
+    readonly_fields = ('submitter', )
 
 
 @admin.register(Comment)
