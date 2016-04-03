@@ -241,7 +241,7 @@ class Comment(models.Model):
 
 class XP(models.Model):
     user = models.ForeignKey(Member, related_name='experiences')
-    amount = models.PositiveIntegerField(default=1)
+    amount = models.IntegerField(default=1)
     date_time = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=200)
 
