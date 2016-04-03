@@ -20,9 +20,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(set_submitter),
-        migrations.AlterField(
-            model_name='codesnippet',
-            name='submitter',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-        ),
     ]
