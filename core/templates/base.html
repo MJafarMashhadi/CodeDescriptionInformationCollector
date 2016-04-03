@@ -70,7 +70,9 @@
                         <strong>{{ request.user.get_short_name }}</strong>
                     </a>
                 </li>
-                <li><a href="/">Home</a></li>
+{#                <li><a href="/">Home</a></li>#}
+                <li><a href="{% url 'core:random' %}">Summarizing</a></li>
+                <li><a href="{# TODO: Amin #}">Evaluating</a></li>
 {#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
                 <li><a href="{% url 'core:leaderboard' %}">Leader Board</a></li>
                 {% if request.user.can_submit_code %}

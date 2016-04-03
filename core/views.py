@@ -112,6 +112,8 @@ def _get_sidebar_context(request):
 
 
 def home(request):
+    if request.user.is_authenticated() and not request.user.should_see_home():
+        return redirect('core:random')
     sidebar_context = _get_sidebar_context(request)
     return render(request, 'home.html', context=sidebar_context)
 

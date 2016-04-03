@@ -173,6 +173,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
             return None
         return comments[0].date_time
 
+    def should_see_home(self):
+        return not Comment.objects.filter(user=self).exists()
+
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=40, primary_key=True)
