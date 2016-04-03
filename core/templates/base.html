@@ -22,7 +22,11 @@
                     $self.parent().parent().hide();
                     return;
                 }
+                if (min == "-inf") {
+                    min = 0;
+                }
                 precent = 100 * (now - min) / (max - min);
+                precent = Math.max(0, precent);
                 $self.css('width', precent + '%');
             });
 
