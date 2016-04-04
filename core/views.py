@@ -1,10 +1,8 @@
 import random
-
 from django.core.exceptions import PermissionDenied
-
 from core.models import ProgrammingLanguage, Evaluate
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count
+from django.db.models import Count, Sum, Case, When, IntegerField
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -290,8 +288,10 @@ def show_random_snippet(request):
 def evaluating(request):
     # FIXME: don't count comments with skip=True
     context = {
-        'snippets': CodeSnippet.objects.all().annotate(Count("comment", distinct=True)).filter(comment__count__gt=0)
-            .order_by('-comment__count'),
+        'snippets': CodeSnippet.objects.all().annotate(comment__count=Sum(Case(When(comment__skip=False, then=1),
+                                                                               output_field=IntegerField()),
+                                                                          distiGnct=True)).
+            filter(comment__count__gt=0).order_by('-comment__count')
     }
 
     return render(request, 'evaluating.html', context=context)
