@@ -110,7 +110,7 @@ USE_L10N = True
 USE_TZ = True
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.environ.get('OPENSHIFT_DATA_DIR', os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR', BASE_DIR), 'media')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/bower_components"),
