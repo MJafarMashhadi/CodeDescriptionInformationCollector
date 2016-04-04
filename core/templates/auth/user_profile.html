@@ -93,7 +93,7 @@ img.avatar {
             <div class="col-lg-12">
                 <h3>Collected Badges</h3>
                 <ul class="badges">
-                {% for badge in user.badges_set %}
+                {% for badge in user.badges.all %}
                     <li><img src="{{ badge.icon }}" /></li>
                 {% empty %}
                     <li>No badges yet</li>
