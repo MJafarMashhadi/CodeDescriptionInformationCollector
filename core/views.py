@@ -1,5 +1,8 @@
 import random
-from core.models import ProgrammingLanguage
+
+from django.core.exceptions import PermissionDenied
+
+from core.models import ProgrammingLanguage, Evaluate
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count
 from django.shortcuts import render_to_response, redirect
@@ -7,7 +10,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404
+from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm
 from .models import Member, CodeSnippet, Comment, UserKnowsPL
@@ -122,7 +125,8 @@ def home(request):
 def snippet_lang(request, language):
     order = int(request.GET.get('order', 1)) - 1
     try:
-        snippet = CodeSnippet.objects.filter(language__name__iexact=language, approved=True).order_by('-date_time').all()[
+        snippet = CodeSnippet.objects.filter(language__name__iexact=language, approved=True).order_by(
+            '-date_time').all()[
                   order:1 + order].get()
     except CodeSnippet.DoesNotExist:
         context = {'language': language, 'finished': order != 1}
@@ -280,6 +284,40 @@ def show_random_snippet(request):
         context = {'finished': True}
         context.update(_get_sidebar_context(request))
         return render(request, 'no_snippet.html', context=context)
+
+
+@login_required
+def evaluating(request):
+    context = {
+        'snippets': CodeSnippet.objects.all().annotate(Count("comment", distinct=True)).filter(comment__count__gt=0)
+            .order_by('-comment__count'),
+    }
+
+    return render(request, 'evaluating.html', context=context)
+
+
+@login_required
+def evaluating_snippet(request, language, name):
+    snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
+
+    context = {
+        'snippet': snippet,
+    }
+    return render(request, 'evaluating_snippet.html', context=context)
+
+
+@login_required
+def evaluating_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user == comment.user:
+        raise PermissionDenied
+    evaluate, is_new = Evaluate.objects.get_or_create(comment=comment, user=request.user)
+    evaluate.agree = request.POST.get('agree') == "true"
+    evaluate.save()
+    return JsonResponse({
+        'agree': comment.agree_count,
+        'disagree': comment.disagree_count,
+    })
 
 
 @login_required

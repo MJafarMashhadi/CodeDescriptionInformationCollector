@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static bootstrap gravatar %}
+{% block title %}Code snippet | {{ snippet.name }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'prism.css' %}"/>
+    <style>
+
+        .snippet-comment-count span {
+            position: relative;
+            top: -100px;
+            left: -63px;
+            color: whitesmoke;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .bg-info {
+            padding: 15px;
+            margin: -15px -15px 15px -15px;
+        }
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'prism.js' %}"></script>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+            <form action="{% url 'core:submit_snippet' %}" method="post">
+                <div class="panel {% if snippet.is_starred %}panel-warning{% else %}panel-primary{% endif %}">
+                    <div class="panel-heading">
+                        <span>#{{ order }} {{ snippet.name }}</span>&nbsp;
+                        <span class="label label-info">{{ snippet.language.name }}</span>
+                    </div>
+
+                    <div class="panel-body">
+                        <p class="bg-info">
+                            You may get <strong>xp points</strong> for evaluating each comment on this method!
+                        </p>
+
+                        <p><strong>Read the following code carefully:</strong></p>
+
+                        <pre class="language-{% if snippet.language.name == 'java' %}java{% else %}clike{% endif %}"><code>{{ snippet.code }}</code></pre>
+
+
+                        <div class="col-lg-12">
+                            <h3>
+                                Comments
+                            </h3>
+                            <hr>
+                            {% for comment in snippet.comment_set.all %}
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="media-object" style="border-radius: 50%;"
+                                             src="{% gravatar_url comment.user.email 40 %}"/>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">{{ comment.comment }} </h4>
+                                        {% if comment.user != user %}
+                                            <div class="text-success"><a data-comment-id="{{ comment.id }}" href=""
+                                                                         class="comment-agree comment-action"><span
+                                                    class="glyphicon glyphicon-triangle-top">&nbsp</span></a><span
+                                                    class="comment-agree-count">{{ comment.agree_count }}</span></div>
+                                            <div class="text-warning"><a data-comment-id="{{ comment.id }}" href=""
+                                                                         class="comment-disagree comment-action"><span
+                                                    class="glyphicon glyphicon-triangle-bottom text-warning">&nbsp</span></a><span
+                                                    class="comment-disagree-count">{{ comment.disagree_count }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% csrf_token %}
+    <script>
+        $('.comment-action').on('click', function () {
+            var x = this;
+            $.ajax({
+                url: "/evaluating/comment/" + x.getAttribute("data-comment-id"),
+                type: 'POST',
+                data: {
+                    'agree': $(x).hasClass('comment-agree'),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json'
+            }).success(function (r) {
+                $(x).parent().parent().find('.comment-agree-count').text(r.agree);
+                $(x).parent().parent().find('.comment-disagree-count').text(r.disagree);
+            }).error(function () {
+            });
+            return false;
+        });
+    </script>
+{% endblock %}

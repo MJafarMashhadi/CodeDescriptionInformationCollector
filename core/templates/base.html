@@ -86,7 +86,7 @@
                 </li>
 {#                <li><a href="/">Home</a></li>#}
                 <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:random' %}" data-toggle="tooltip" data-placement="bottom" title="Summarizing"><i class="fa fa-2x fa-terminal"></i></a></li>
-                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{# TODO: Amin #}" data-toggle="tooltip" data-placement="bottom" title="Evaluating"><i class="fa fa-2x fa-list-alt"></i></a></li>
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:evaluating' %}" data-toggle="tooltip" data-placement="bottom" title="Evaluating"><i class="fa fa-2x fa-list-alt"></i></a></li>
 {#                <li><a href="{% url 'core:profile' %}">Profile</a></li>#}
                 <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:leaderboard' %}" data-toggle="tooltip" data-placement="bottom" title="Leaderboard"><i class="fa fa-2x fa-trophy"></i></a></li>
                 {% if request.user.can_submit_code %}

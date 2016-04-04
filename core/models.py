@@ -241,6 +241,26 @@ class Comment(models.Model):
     class Meta:
         unique_together = ('user', 'snippet')
 
+    @property
+    def agree_count(self):
+        return Evaluate.objects.filter(comment=self, agree=True).count()
+
+    @property
+    def disagree_count(self):
+        return Evaluate.objects.filter(comment=self, agree=False).count()
+
+
+class Evaluate(models.Model):
+    user = models.ForeignKey(Member)
+    comment = models.ForeignKey(Comment)
+    agree = models.BooleanField(default=True)
+
+    def __str__(self):
+        return 'evaluate on comment {}'.format(self.comment)
+
+    class Meta:
+        unique_together = ('user', 'comment')
+
 
 class XP(models.Model):
     user = models.ForeignKey(Member, related_name='experiences')
