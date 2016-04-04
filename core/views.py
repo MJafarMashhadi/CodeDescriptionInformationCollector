@@ -185,11 +185,11 @@ def submit_snippet(request):
 
     if 'skip' in request.POST:
         if request.session.get('skips', 0) < MAX_SKIP:
-            comment = Comment()
-            comment.snippet = snippet
-            comment.user = request.user
-            comment.skip = True
-            comment.save()
+            Comment.objects.create(
+                snippet=snippet,
+                user=request.user,
+                skip=True
+            )
             request.user.earn_xp(-1, 'Skipped {}'.format(snippet.name))
             if 'skips' not in request.session:
                 request.session['skips'] = 0

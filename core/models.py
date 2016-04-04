@@ -162,16 +162,16 @@ class Member(AbstractBaseUser, PermissionsMixin):
             return self.LEVELS[i + 1]
 
     def get_first_comment_date(self):
-        comments = Comment.objects.filter(user=self).order_by('date_time')[:1].all()
+        comments = Comment.objects.filter(user=self).order_by('date_time').values('date_time')[:1].all()
         if len(comments) == 0:
             return None
-        return comments[0].date_time
+        return comments[0]['date_time']
 
     def get_last_comment_date(self):
-        comments = Comment.objects.filter(user=self).order_by('-date_time')[:1].all()
+        comments = Comment.objects.filter(user=self).order_by('-date_time').values('date_time')[:1].all()
         if len(comments) == 0:
             return None
-        return comments[0].date_time
+        return comments[0]['date_time']
 
     def should_see_home(self):
         return not Comment.objects.filter(user=self).exists()
