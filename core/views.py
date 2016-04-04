@@ -290,7 +290,7 @@ def evaluating(request):
     context = {
         'snippets': CodeSnippet.objects.all().annotate(comment__count=Sum(Case(When(comment__skip=False, then=1),
                                                                                output_field=IntegerField()),
-                                                                          distiGnct=True)).
+                                                                          distinct=True)).
             filter(comment__count__gt=0).order_by('-comment__count')
     }
 
