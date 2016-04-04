@@ -24,6 +24,27 @@
 
 {% block extra_js %}
     <script type="text/javascript" src="{% static 'prism.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.comment-action').on('click', function () {
+                var x = this;
+                $.ajax({
+                    url: "/evaluating/comment/" + x.getAttribute("data-comment-id"),
+                    type: 'POST',
+                    data: {
+                        'agree': $(x).hasClass('comment-agree'),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    dataType: 'json'
+                }).success(function (r) {
+                    $(x).parent().parent().find('.comment-agree-count').text(r.agree);
+                    $(x).parent().parent().find('.comment-disagree-count').text(r.disagree);
+                }).error(function () {
+                });
+                return false;
+            });
+        });
+    </script>
 {% endblock %}
 {% block body %}
     <div class="row">
@@ -36,10 +57,6 @@
                     </div>
 
                     <div class="panel-body">
-                        <p class="bg-info">
-                            You may get <strong>xp points</strong> for evaluating each comment on this method!
-                        </p>
-
                         <p><strong>Read the following code carefully:</strong></p>
 
                         <pre class="language-{% if snippet.language.name == 'java' %}java{% else %}clike{% endif %}"><code>{{ snippet.code }}</code></pre>
@@ -47,15 +64,11 @@
 
                         <div class="col-lg-12">
                             <h3>
-                                Comments
+                                Are these comments relevant or non relevant?
                             </h3>
                             <hr>
                             {% for comment in snippet.comment_set.all %}
                                 <div class="media">
-                                    <div class="media-left">
-                                        <img class="media-object" style="border-radius: 50%;"
-                                             src="{% gravatar_url comment.user.email 40 %}"/>
-                                    </div>
                                     <div class="media-body">
                                         <h4 class="media-heading">{{ comment.comment }} </h4>
                                         {% if comment.user != user %}
@@ -80,24 +93,4 @@
             </form>
         </div>
     </div>
-    {% csrf_token %}
-    <script>
-        $('.comment-action').on('click', function () {
-            var x = this;
-            $.ajax({
-                url: "/evaluating/comment/" + x.getAttribute("data-comment-id"),
-                type: 'POST',
-                data: {
-                    'agree': $(x).hasClass('comment-agree'),
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                },
-                dataType: 'json'
-            }).success(function (r) {
-                $(x).parent().parent().find('.comment-agree-count').text(r.agree);
-                $(x).parent().parent().find('.comment-disagree-count').text(r.disagree);
-            }).error(function () {
-            });
-            return false;
-        });
-    </script>
 {% endblock %}

@@ -288,6 +288,7 @@ def show_random_snippet(request):
 
 @login_required
 def evaluating(request):
+    # FIXME: don't count comments with skip=True
     context = {
         'snippets': CodeSnippet.objects.all().annotate(Count("comment", distinct=True)).filter(comment__count__gt=0)
             .order_by('-comment__count'),
@@ -314,6 +315,9 @@ def evaluating_comment(request, comment_id):
     evaluate, is_new = Evaluate.objects.get_or_create(comment=comment, user=request.user)
     evaluate.agree = request.POST.get('agree') == "true"
     evaluate.save()
+    if is_new:
+        # TODO: earn xp points
+        pass
     return JsonResponse({
         'agree': comment.agree_count,
         'disagree': comment.disagree_count,
