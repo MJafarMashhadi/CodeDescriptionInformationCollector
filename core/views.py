@@ -301,6 +301,8 @@ def evaluating(request):
             if len(real_snippets) == 5:
                 break
 
+    # TODO amin :)
+
     context = {
         'snippets': real_snippets
     }
@@ -314,6 +316,7 @@ def evaluating_snippet(request, language, name):
 
     this_user_evaluations = list(map(lambda x: x['comment'], Evaluate.objects.filter(user=request.user, comment__snippet=snippet).values('comment')))
     evaluation_comments = Comment.objects.filter(skip=False, snippet=snippet).exclude(user=request.user).exclude(pk__in=this_user_evaluations).order_by('?').all()[:5]
+    # TODO: اگر یه کامنتی ۵ تا لایک یا دیسلایک داشت
     context = {
         'snippet': snippet,
         'evaluation_comments': evaluation_comments
