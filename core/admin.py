@@ -59,7 +59,8 @@ class CodeSnippetAdmin(admin.ModelAdmin):
     readonly_fields = ('submitter', )
 
     def save_model(self, request, obj, form, change):
-        obj.submitter = request.user
+        if obj.submitter == None:
+            obj.submitter = request.user
         if not obj.submitter.is_staff:
             if change:
                 count = CodeSnippet.objects.filter(submitter=request.user, approved=True).count()
