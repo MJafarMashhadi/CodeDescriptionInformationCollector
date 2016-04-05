@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static bootstrap %}
-{% block title %}Code snippet | {{ snippet.name }}{% endblock %}
+{% block title %}Evaluation{% endblock %}
 
 {% block extra_css %}
 {% endblock %}
@@ -19,7 +19,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Comments</th>
+                        <th>Unevaluated Comments</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,7 +28,7 @@
                             <td><span class="label label-info">{{ snippet.language.name }}</span><a
                                     href="{% url 'core:evaluating_snippet' language=snippet.language.name name=snippet.name %}">{{ snippet.name }}</a>
                             </td>
-                            <td>{{ snippet.comment__count }}</td>
+                            <td>{{ snippet.real_comment_count }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

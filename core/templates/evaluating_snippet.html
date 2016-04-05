@@ -39,6 +39,14 @@
                 }).success(function (r) {
                     $(x).parent().parent().find('.comment-agree-count').text(r.agree);
                     $(x).parent().parent().find('.comment-disagree-count').text(r.disagree);
+                    $(x).parents('.media').fadeOut(500, function () {
+                        $(this).next('hr').remove();
+                        $(this).remove();
+
+                        if (!($('.media').length)) {
+                            $('#no-more').removeClass('hide');
+                        }
+                    });
                 }).error(function () {
                 });
                 return false;
@@ -67,7 +75,7 @@
                                 Are these comments relevant or non relevant?
                             </h3>
                             <hr>
-                            {% for comment in snippet.comment_set.all %}
+                            {% for comment in evaluation_comments %}
                                 <div class="media">
                                     <div class="media-body">
                                         <h4 class="media-heading">{{ comment.comment }} </h4>
@@ -86,7 +94,10 @@
                                     </div>
                                 </div>
                                 <hr>
+                            {% empty %}
+                                No more comments to evaluate. <a href="{% url 'core:evaluating' %}">Continue</a>
                             {% endfor %}
+                            <span class="hide" id="no-more">No more comments to evaluate. <a href="{% url 'core:evaluating' %}">Continue</a></span>
                         </div>
                     </div>
                 </div>

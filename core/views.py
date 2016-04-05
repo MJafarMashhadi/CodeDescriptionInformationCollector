@@ -2,7 +2,7 @@ import random
 from django.core.exceptions import PermissionDenied
 from core.models import ProgrammingLanguage, Evaluate
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count, Sum, Case, When, IntegerField
+from django.db.models import Count, Sum, Case, When, IntegerField, Q
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -286,12 +286,22 @@ def show_random_snippet(request):
 
 @login_required
 def evaluating(request):
-    # FIXME: don't count comments with skip=True
+    snippets = CodeSnippet.objects.all().annotate(
+        comment__count=Sum(Case(When(comment__skip=False, then=1), output_field=IntegerField()), distinct=True)).filter(
+        comment__count__gt=0).order_by('-comment__count')
+
+    real_snippets = []
+    for snippet in snippets:
+        evaluated_comments = Evaluate.objects.filter(user=request.user, comment__snippet=snippet).count()
+        this_user_comments = 1 if Comment.objects.filter(user=request.user, snippet=snippet).exists() else 0
+        snippet.real_comment_count = snippet.comment__count - (evaluated_comments + this_user_comments)
+        if snippet.real_comment_count > 0:
+            real_snippets.append(snippet)
+            if len(real_snippets) == 5:
+                break
+
     context = {
-        'snippets': CodeSnippet.objects.all().annotate(comment__count=Sum(Case(When(comment__skip=False, then=1),
-                                                                               output_field=IntegerField()),
-                                                                          distinct=True)).
-            filter(comment__count__gt=0).order_by('-comment__count')
+        'snippets': real_snippets
     }
 
     return render(request, 'evaluating.html', context=context)
@@ -301,8 +311,11 @@ def evaluating(request):
 def evaluating_snippet(request, language, name):
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
+    this_user_evaluations = list(map(lambda x: x['comment'], Evaluate.objects.filter(user=request.user, comment__snippet=snippet).values('comment')))
+    evaluation_comments = Comment.objects.filter(skip=False, snippet=snippet).exclude(user=request.user).exclude(pk__in=this_user_evaluations).order_by('?').all()[:5]
     context = {
         'snippet': snippet,
+        'evaluation_comments': evaluation_comments
     }
     return render(request, 'evaluating_snippet.html', context=context)
 

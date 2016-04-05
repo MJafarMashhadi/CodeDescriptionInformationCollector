@@ -75,3 +75,9 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Badge)
 class BadgeAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
+
+
+@admin.register(Evaluate)
+class EvaluateAdmin(admin.ModelAdmin):
+    list_display = ('user', 'comment', 'agree')
+    readonly_fields = ('user', 'comment', 'agree')
