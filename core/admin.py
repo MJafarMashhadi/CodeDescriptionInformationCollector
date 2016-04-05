@@ -56,7 +56,7 @@ class CodeSnippetAdmin(admin.ModelAdmin):
         ('approved', 'submitter'),
         'code'
     )
-    readonly_fields = ('submitter', )
+    # readonly_fields = ('submitter', )
 
 
 @admin.register(Comment)
