@@ -56,7 +56,21 @@ class CodeSnippetAdmin(admin.ModelAdmin):
         ('approved', 'submitter'),
         'code'
     )
-    # readonly_fields = ('submitter', )
+    readonly_fields = ('submitter', )
+
+    def save_model(self, request, obj, form, change):
+        obj.submitter = request.user
+        if not obj.submitter.is_staff:
+            if change:
+                count = CodeSnippet.objects.filter(submitter=request.user, approved=True).count()
+                if count == 1:
+                    request.user.earn_badge('code_submitter')
+                elif count == 3:
+                    request.user.earn_badge('code_submitter_2')
+                elif count == 4:
+                    request.user.earn_badge('code_submitter_3')
+
+        obj.save()
 
 
 @admin.register(Comment)

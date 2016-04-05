@@ -224,6 +224,17 @@ class CodeSnippet(models.Model):
     def virgin(self):
         return not Comment.objects.filter(snippet=self, skip=False).exists()
 
+    def earn_badge(self, badge_name):
+        try:
+            badge = Badge.objects.get(slug=badge_name)
+        except Badge.DoesNotExist:
+            return None
+
+        return EarnBadge.objects.get_or_create(
+            user=self,
+            badge=badge
+        )
+
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)
 
@@ -249,6 +260,15 @@ class Comment(models.Model):
     def disagree_count(self):
         return Evaluate.objects.filter(comment=self, agree=False).count()
 
+    def save(self, *args, **kwargs):
+        if 'commit' not in kwargs or kwargs['commit']:
+            if not self.skip:
+                if self.snippet.is_starred and self.user.comments.filter(comment_skip=False, snippet__is_starred=True).count() == 2-1:
+                    self.user.earn_bagde('multiple_of_star_methods')
+                elif self.snippet.score == 10 and self.user.comments.filter(comment_skip=False, snippet__score=10).count() == 3-1:
+                    self.user.earn_badge('multiple_of_10')
+        super(Comment, self).save(*args, **kwargs)
+
 
 class Evaluate(models.Model):
     user = models.ForeignKey(Member)
@@ -269,10 +289,28 @@ class XP(models.Model):
     description = models.CharField(max_length=200)
 
     def save(self, *args, **kwargs):
+        changed_level = False
         if not self.pk:
             user = self.user
+            before = user.level_int
             user.score += self.amount
             user.save()
+            after = user.level_int
+            if after > before:
+                changed_level = True
+        if changed_level:
+            level = self.user.level_int + 1
+            if level == 2:
+                self.user.earn_badge('one_star')
+            elif level == 4:
+                self.user.earn_badge('two_star')
+                self.user.earn_badge('middle_of_the_way')
+            elif level == 6:
+                self.user.earn_badge('three_star')
+            elif level == 8:
+                self.user.earn_badge('four_star')
+                self.user.earn_badge('finishing_the_game')
+
         super(XP, self).save(*args, **kwargs)
 
 
