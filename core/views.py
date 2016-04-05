@@ -292,8 +292,9 @@ def evaluating(request):
 
     real_snippets = []
     for snippet in snippets:
-        evaluated_comments = Evaluate.objects.filter(user=request.user, comment__snippet=snippet).count()
-        this_user_comments = 1 if Comment.objects.filter(user=request.user, snippet=snippet).exists() else 0
+        evaluated_comments = Evaluate.objects.filter(user=request.user, comment__snippet=snippet)\
+            .exclude(comment__user=request.user).count()
+        this_user_comments = 1 if Comment.objects.filter(user=request.user, snippet=snippet, comment__skip=False).exists() else 0
         snippet.real_comment_count = snippet.comment__count - (evaluated_comments + this_user_comments)
         if snippet.real_comment_count > 0:
             real_snippets.append(snippet)
