@@ -59,7 +59,7 @@ class CodeSnippetAdmin(admin.ModelAdmin):
     readonly_fields = ('submitter', )
 
     def save_model(self, request, obj, form, change):
-        if obj.submitter == None:
+        if obj.submitter is None:
             obj.submitter = request.user
         if not obj.submitter.is_staff:
             if change:
