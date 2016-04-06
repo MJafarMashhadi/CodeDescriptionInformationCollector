@@ -12,6 +12,7 @@ class RegistrationForm(UserCreationForm):
         fields = (
             'username', 'email',
             'first_name', 'last_name', 'nickname',
+            'student_number',
             'academic_degree', 'experience',
             'industry_experience'
         )
@@ -42,6 +43,7 @@ class UserProfileForm(forms.ModelForm):
         model = Member
         fields = (
             'first_name', 'last_name', 'nickname',
+            'student_number',
             'academic_degree', 'experience',
             'industry_experience'
         )

@@ -36,7 +36,7 @@ class MemberAdmin(admin.ModelAdmin):
     list_display = ('email', 'username', 'get_full_name', 'nickname', 'academic_degree', 'score')
     fields = (
         ('first_name', 'last_name', 'nickname'),
-        ('email', 'username'),
+        ('email', 'username', 'student_number'),
         'score',
         ('academic_degree', 'experience', 'industry_experience'),
         ('is_active', 'is_staff', 'is_superuser'),
