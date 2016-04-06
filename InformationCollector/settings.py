@@ -135,5 +135,5 @@ if not DEBUG:
 
     RAVEN_CONFIG = {
         'dsn': 'https://b32f63a912054d01b45a48a515a50fcd:8b46738c65194064a0dc01547b5c8a18@sentry.nivad.io/3',
-        'release': raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+        'release': "1.0.0",
     }
