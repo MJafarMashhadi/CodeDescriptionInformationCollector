@@ -25,9 +25,14 @@
                                     </div>
                                     <div style="width: 15%; display: table-cell; vertical-align: middle">
                                         <div style="display: block; width: 100%">
+                                            <a href="https://en.gravatar.com/" target="_blank">
                                             <img style="margin: 0 auto" src="{% gravatar_url request.user.email 60 %}"/>
+                                            </a>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <p class="bg-info">To change your avatar visit <a href="https://en.gravatar.com/" target="_blank">gravatar.com</a></p>
                                 </div>
                                 {{ profile_form|bootstrap }}
                             </div>
