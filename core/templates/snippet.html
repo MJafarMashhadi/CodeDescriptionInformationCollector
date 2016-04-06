@@ -37,6 +37,28 @@
     padding: 15px;
     margin: -15px -15px 15px -15px;
 }
+.mystery_box {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: 0;
+    padding: 200px 100px;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+
+    -webkit-transition:background 1s;
+    -moz-transition:background 1s;
+    -o-transition:background 1s;
+    transition:background 1s
+}
+
+.mystery_box.bg1 {
+    background: rgba(239, 234, 67, 0.99);
+}
+
+.mystery_box.bg2 {
+    background: rgba(239, 234, 67, 0.60);
+}
 </style>
 {% endblock %}
 
@@ -83,10 +105,36 @@
                     .blur(updateCounter)
                     .keyup(updateCounter)
                     .click(updateCounter);
+
+            {% if mystery_box %}
+            $('.mystery-description').removeClass('hide').fadeOut(0);
+            $('body').css('overflow-y', 'hidden');
+            $('.mystery_box a.btn-info').on('click', function () {
+                $(this).remove();
+                $('.mystery-description').fadeIn(1000);
+                $('.mystery_box').removeClass('bg1').addClass('bg2');
+            });
+            $('.mystery_box a.btn-danger').on('click', function () {
+                $('.mystery_box').fadeOut(400, function () {
+                    $(this).remove();
+                    $('body').css('overflow-y', 'scroll');
+                });
+            });
+            {% endif %}
         });
     </script>
 {% endblock %}
 {% block body %}
+{% if mystery_box %}
+    <div class="mystery_box bg1">
+        <div style="margin: 40px auto" align="center">
+            <h1>You've got a mystery box!!</h1>
+            <a class="btn btn-info">Click to see what is in it!!</a>
+            <h4 class="mystery-description hide">There is {% if mystery_box == 'nill' %}Nothing{% elif mystery_box == 'badge' %}a badge{% elif mystery_box == 'score' %}0.25 score{% elif mystery_box == 'xppoints' %}10XP points{% endif %} in it!</h4>
+            <a class="btn btn-danger btn-raised mystery-description hide">Got it!</a>
+        </div>
+    </div>
+{% endif %}
 {% with nc=snippet.n_comments %}
     <div class="row">
         <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">

@@ -271,6 +271,24 @@ def show_random_snippet(request):
             snippet = random.choice(better_snippets)
             request.session['snippet_id'] = snippet.pk
 
+        if request.user.has_mystery_box():
+            prizes = ['nill', 'badge', 'score', 'xppoints']
+            for p in prizes:
+                if request.user.got_mystery_box_before(p):
+                    prizes.remove(p)
+            prize = random.choice(prizes)
+            {
+                'nill': lambda: None,
+                'badge': lambda: request.user.earn_badge('comp_eng'),
+                'score': lambda: None,
+                'xppoints': lambda: request.user.earn_xp(10, 'Earned in a mystery box :-)')
+            }[prize]()
+            request.user.add_mystery_box_to_history(prize)
+            request.user.remove_mystery_box()
+            mystery_box = prize
+        else:
+            mystery_box = None
+
         is_double = snippet.n_comments < 3
         context = {
             'snippet': snippet,
@@ -279,6 +297,7 @@ def show_random_snippet(request):
             'comment_form': CommentForm(),
             'next_url': reverse('core:random'),
             'skips': request.session.get('skips', 0),
+            'mystery_box': mystery_box,
             'available_skips': MAX_SKIP - request.session.get('skips', 0)
         }
         context.update(_get_sidebar_context(request))
