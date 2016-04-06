@@ -46,8 +46,6 @@ INSTALLED_APPS = (
     # apps
     'core',
 )
-if not DEBUG:
-    INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat', )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,12 +126,3 @@ LOGIN_URL = 'core:login'
 DEBUG_TOOLBAR_CONFIG = {
     'JQUERY_URL': '',
 }
-
-# Raven
-if not DEBUG:
-    import raven
-
-    RAVEN_CONFIG = {
-        'dsn': 'https://b32f63a912054d01b45a48a515a50fcd:8b46738c65194064a0dc01547b5c8a18@sentry.nivad.io/3',
-        'release': "1.0.0",
-    }
