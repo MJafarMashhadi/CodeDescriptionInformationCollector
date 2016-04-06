@@ -221,7 +221,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return ',' not in name and name in self.got_mystery_boxes
 
     def add_mystery_box_to_history(self, name):
-        if len(self.got_mystery_boxes) > 0:
+        if self.got_mystery_boxes and len(self.got_mystery_boxes) > 0:
             self.got_mystery_boxes += ',' + name
         else:
             self.got_mystery_boxes = name
