@@ -88,10 +88,10 @@ def _get_sidebar_context(request):
                                  .order_by('-score') \
                                  .all()[:10]
         normal_high_scores = request.user.get_commentable_snippets_query_set() \
-                                     .annotate(n_comments_a=Count('usersViewed')) \
-                                     .filter(n_comments_a__gte=3) \
-                                     .order_by('-score') \
-                                     .all()[:10]
+                                 .annotate(n_comments_a=Count('usersViewed')) \
+                                 .filter(n_comments_a__gte=3) \
+                                 .order_by('-score') \
+                                 .all()[:10]
 
         all_high_scores = dict()
 
@@ -162,7 +162,6 @@ def show_snippet(request, language, name):
         comment_form = CommentForm(instance=prev_comment)
     except Comment.DoesNotExist:
         comment_form = CommentForm()
-
 
     is_double = snippet.n_comments < 3
     context = {
@@ -353,14 +352,21 @@ def evaluating_comment(request, comment_id):
     if request.user == comment.user:
         raise PermissionDenied
     evaluate, is_new = Evaluate.objects.get_or_create(comment=comment, user=request.user)
-    if is_new:
-        request.user.earn_xp(1, 'evaluating')
-        
     evaluate.agree = request.POST.get('agree') == "true"
-    xp_desc = 'for evaluation on comment ' + str(comment.id)
-    XP.objects.filter(user=comment.user, description=xp_desc).delete()
-    request.user.earn_xp(1 if evaluate.agree else -1, xp_desc)
+    xp_points = 1 if evaluate.agree else -1
+
+    if is_new:
+        request.user.earn_xp(1, 'evaluating a comment')
+        xp_desc = 'for evaluation on your comment'
+        xp = comment.user.earn_xp(xp_points, xp_desc)
+    else:
+        xp = evaluate.xp
+        xp.amount = xp_points
+        xp.save()
+
+    evaluate.xp = xp
     evaluate.save()
+
     return JsonResponse({
         'agree': comment.agree_count,
         'disagree': comment.disagree_count,

@@ -328,6 +328,7 @@ class Evaluate(models.Model):
     user = models.ForeignKey(Member)
     comment = models.ForeignKey(Comment)
     agree = models.BooleanField(default=True)
+    xp = models.ForeignKey('XP', null=True, blank=True)
 
     def __str__(self):
         return 'evaluate on comment {}'.format(self.comment)
