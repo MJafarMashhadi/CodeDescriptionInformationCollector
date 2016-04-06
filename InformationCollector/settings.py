@@ -45,7 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     # apps
     'core',
-) 
+)
 if not DEBUG:
     INSTALLED_APPS = INSTALLED_APPS + ('raven.contrib.django.raven_compat', )
 
