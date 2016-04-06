@@ -82,23 +82,23 @@ def _get_sidebar_context(request):
         if len(fewest_summaries) == 0:
             fewest_summaries = request.user.get_commentable_snippets_query_set().order_by('?').all()[:10]
 
-        virgin_high_scores = request.user.get_commentable_snippets_query_set() \
+        double_high_scores = request.user.get_commentable_snippets_query_set() \
                                  .annotate(n_comments_a=Count('usersViewed')) \
-                                 .filter(n_comments_a=0) \
+                                 .filter(n_comments_a__lt=3) \
                                  .order_by('-score') \
                                  .all()[:10]
-        non_virgin_high_scores = request.user.get_commentable_snippets_query_set() \
+        normal_high_scores = request.user.get_commentable_snippets_query_set() \
                                      .annotate(n_comments_a=Count('usersViewed')) \
-                                     .filter(n_comments_a__gt=0) \
+                                     .filter(n_comments_a__gte=3) \
                                      .order_by('-score') \
                                      .all()[:10]
 
         all_high_scores = dict()
 
-        for snippet in virgin_high_scores:
+        for snippet in double_high_scores:
             all_high_scores[snippet] = 2 * snippet.score, True
 
-        for snippet in non_virgin_high_scores:
+        for snippet in normal_high_scores:
             all_high_scores[snippet] = snippet.score, False
 
         all_high_scores = sorted(all_high_scores.items(), key=lambda a: -a[1][0])[:10]
@@ -137,9 +137,11 @@ def snippet_lang(request, language):
     except Comment.DoesNotExist:
         comment_form = CommentForm()
 
+    is_double = snippet.n_comments < 3
     context = {
         'snippet': snippet,
-        'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
+        'is_double': is_double,
+        'snippet_score': snippet.score if is_double else 2 * snippet.score,
         'order': order + 1,
         'comment_form': comment_form,
         'next_url': '{}?order={}'.format(request.path, order + 2),
@@ -161,9 +163,12 @@ def show_snippet(request, language, name):
     except Comment.DoesNotExist:
         comment_form = CommentForm()
 
+
+    is_double = snippet.n_comments < 3
     context = {
         'snippet': snippet,
-        'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
+        'is_double': is_double,
+        'snippet_score': snippet.score if is_double else 2 * snippet.score,
         'comment_form': comment_form,
         'skips': request.session.get('skips', 0),
         'available_skips': MAX_SKIP - request.session.get('skips', 0)
@@ -179,7 +184,7 @@ def submit_snippet(request):
         return HttpResponseBadRequest()
 
     snippet = get_object_or_404(CodeSnippet, pk=request.POST.get('snippet', None))
-    is_virgin = snippet.virgin
+    is_double = snippet.n_comments < 3
     try:
         comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
     except Comment.DoesNotExist:
@@ -207,7 +212,7 @@ def submit_snippet(request):
         comment.snippet = snippet
         comment.save()
         request.session['skips'] = 0
-        if is_virgin:
+        if is_double:
             request.user.earn_xp(2 * snippet.score,
                                  'Summarized {} for the first time (Double score)'.format(snippet.name))
         else:
@@ -266,9 +271,11 @@ def show_random_snippet(request):
             snippet = random.choice(better_snippets)
             request.session['snippet_id'] = snippet.pk
 
+        is_double = snippet.n_comments < 3
         context = {
             'snippet': snippet,
-            'snippet_score': snippet.score if not snippet.virgin else 2 * snippet.score,
+            'is_double': is_double,
+            'snippet_score': snippet.score if is_double else 2 * snippet.score,
             'comment_form': CommentForm(),
             'next_url': reverse('core:random'),
             'skips': request.session.get('skips', 0),

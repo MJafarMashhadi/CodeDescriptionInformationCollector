@@ -74,6 +74,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     badges = models.ManyToManyField('Badge', through='EarnBadge')
 
+    mystery_box_points = models.CharField(max_length=11, blank=True, null=True)
+    got_mystery_boxes = models.CharField(max_length=50, blank=True, null=True)
+
     objects = MemberManager()
 
     USERNAME_FIELD = 'username'
@@ -175,6 +178,53 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     def should_see_home(self):
         return not Comment.objects.filter(user=self).exists()
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            import random
+            self.mystery_box_points = ','.join(list(map(str,
+                                                   [
+                                                       random.randrange(self.LEVEL_RANGES[1][0],
+                                                                        self.LEVEL_RANGES[1][1]),
+                                                       random.randrange(self.LEVEL_RANGES[3][0],
+                                                                        self.LEVEL_RANGES[3][1]),
+                                                       random.randrange(self.LEVEL_RANGES[5][0],
+                                                                        self.LEVEL_RANGES[5][1])
+                                                   ]
+                                                   )))
+
+        super(Member, self).save(*args, **kwargs)
+
+    def has_mystery_box(self):
+        if not self.mystery_box_points:
+            return False
+        points = list(map(int, self.mystery_box_points.split(',')))
+        for p in points:
+            if self.score >= p:
+                return True
+
+        return False
+
+    def remove_mystery_box(self):
+        if not self.mystery_box_points:
+            return
+        points = list(map(int, self.mystery_box_points.split(',')))
+        for p in points:
+            if self.score >= p:
+                points.remove(p)
+        self.mystery_box_points = ','.join(list(map(str, points)))
+        self.save()
+
+    def got_mystery_box_before(self, name):
+        return ',' not in name and name in self.got_mystery_boxes
+
+    def add_mystery_box_to_history(self, name):
+        if len(self.got_mystery_boxes) > 0:
+            self.got_mystery_boxes += ',' + name
+        else:
+            self.got_mystery_boxes = name
+
+        self.save()
 
 
 class ProgrammingLanguage(models.Model):
