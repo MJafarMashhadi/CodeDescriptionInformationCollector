@@ -1,6 +1,6 @@
 import random
 from django.core.exceptions import PermissionDenied
-from core.models import ProgrammingLanguage, Evaluate
+from core.models import ProgrammingLanguage, Evaluate, XP
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count, Sum, Case, When, IntegerField, Q
 from django.shortcuts import render_to_response, redirect
@@ -290,21 +290,16 @@ def evaluating(request):
         comment__count=Sum(Case(When(comment__skip=False, then=1), output_field=IntegerField()), distinct=True)).filter(
         comment__count__gt=0).order_by('-comment__count')
 
-    real_snippets = []
     for snippet in snippets:
-        evaluated_comments = Evaluate.objects.filter(user=request.user, comment__snippet=snippet)\
+        evaluated_comments = Evaluate.objects.filter(user=request.user, comment__snippet=snippet) \
             .exclude(comment__user=request.user).count()
         this_user_comments = 1 if Comment.objects.filter(user=request.user, snippet=snippet, skip=False).exists() else 0
         snippet.real_comment_count = snippet.comment__count - (evaluated_comments + this_user_comments)
-        if snippet.real_comment_count > 0:
-            real_snippets.append(snippet)
-            if len(real_snippets) == 5:
-                break
 
-    # TODO amin :)
+    snippets = sorted(snippets, key=lambda x: x.real_comment_count, reverse=True)[:5]
 
     context = {
-        'snippets': real_snippets
+        'snippets': snippets
     }
 
     return render(request, 'evaluating.html', context=context)
@@ -314,9 +309,10 @@ def evaluating(request):
 def evaluating_snippet(request, language, name):
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
-    this_user_evaluations = list(map(lambda x: x['comment'], Evaluate.objects.filter(user=request.user, comment__snippet=snippet).values('comment')))
-    evaluation_comments = Comment.objects.filter(skip=False, snippet=snippet).exclude(user=request.user).exclude(pk__in=this_user_evaluations).order_by('?').all()[:5]
-    # TODO: اگر یه کامنتی ۵ تا لایک یا دیسلایک داشت
+    evaluation_comments = Comment.objects.annotate(Count('evaluate', distinct=True)).filter(skip=False,
+                                                                                            snippet=snippet).exclude(
+        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).order_by('?')[:5]
+
     context = {
         'snippet': snippet,
         'evaluation_comments': evaluation_comments
@@ -330,11 +326,14 @@ def evaluating_comment(request, comment_id):
     if request.user == comment.user:
         raise PermissionDenied
     evaluate, is_new = Evaluate.objects.get_or_create(comment=comment, user=request.user)
-    evaluate.agree = request.POST.get('agree') == "true"
-    evaluate.save()
     if is_new:
-        # TODO: earn xp points
-        pass
+        request.user.earn_xp(1, 'evaluating')
+        
+    evaluate.agree = request.POST.get('agree') == "true"
+    xp_desc = 'for evaluation on comment ' + str(comment.id)
+    XP.objects.filter(user=comment.user, description=xp_desc).delete()
+    request.user.earn_xp(1 if evaluate.agree else -1, xp_desc)
+    evaluate.save()
     return JsonResponse({
         'agree': comment.agree_count,
         'disagree': comment.disagree_count,
