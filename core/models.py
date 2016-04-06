@@ -216,6 +216,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
         self.save()
 
     def got_mystery_box_before(self, name):
+        if not self.got_mystery_boxes:
+            return False
         return ',' not in name and name in self.got_mystery_boxes
 
     def add_mystery_box_to_history(self, name):

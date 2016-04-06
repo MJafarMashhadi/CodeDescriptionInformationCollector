@@ -271,6 +271,12 @@ def show_random_snippet(request):
             snippet = random.choice(better_snippets)
             request.session['snippet_id'] = snippet.pk
 
+    except Exception as e:
+        print(e)
+        context = {'finished': True}
+        context.update(_get_sidebar_context(request))
+        return render(request, 'no_snippet.html', context=context)
+    else:
         if request.user.has_mystery_box():
             prizes = ['nill', 'badge', 'score', 'xppoints']
             for p in prizes:
@@ -303,11 +309,6 @@ def show_random_snippet(request):
         context.update(_get_sidebar_context(request))
 
         return render(request, 'snippet.html', context=context)
-    except Exception as e:
-        print(e)
-        context = {'finished': True}
-        context.update(_get_sidebar_context(request))
-        return render(request, 'no_snippet.html', context=context)
 
 
 @login_required
