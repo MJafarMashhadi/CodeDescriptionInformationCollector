@@ -128,7 +128,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         'Middle of the way',
         'Code squasher',
         'Point warm',
-        'Proficient code summarized',
+        'Proficient code summarizer',
         'Monster slayer'
     ]
 
@@ -161,7 +161,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
     @property
     def next_level(self):
         i = self.level_int
-        if i >= len(self.LEVELS) - 2:
+        if i >= len(self.LEVELS) - 1:
             return ''
         else:
             return self.LEVELS[i + 1]
