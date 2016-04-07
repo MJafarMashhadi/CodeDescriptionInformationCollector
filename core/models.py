@@ -70,7 +70,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     programming_languages = models.ManyToManyField('ProgrammingLanguage', through='UserKnowsPL')
 
-    score = models.PositiveSmallIntegerField(default=0)
+    score = models.IntegerField(default=0)
 
     student_number = models.CharField(max_length=8, null=True, blank=True, validators=[validators.RegexValidator(r'(8[5-9]|9[0-4])[1-3][0-2][0-9]{4}')])
 
