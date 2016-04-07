@@ -28,6 +28,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="programming languages container-fluid">
+                        {{ programming_languages.management_form }}
                         {% for form in programming_languages.forms %}
                             <div class="form-group">
                                 <p>Your months of experience in programming with <label>{{ form.language.value }}</label></p>
