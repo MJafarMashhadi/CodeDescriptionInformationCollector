@@ -408,7 +408,7 @@ def profile(request):
 
 
 def user_profile(request, username):
-    user = get_object_or_404(Member, username=username)
+    user = get_object_or_404(Member, username__iexact=username)
     xp_points_history = user.experiences.order_by('-date_time')[:5].all()
     return render(request, 'auth/user_profile.html', context={
         'user': user,

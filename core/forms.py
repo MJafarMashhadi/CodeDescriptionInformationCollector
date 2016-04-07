@@ -73,6 +73,7 @@ class CommentForm(forms.ModelForm):
             })
         }
 
+
 class CodeSnippetSubmitForm(forms.ModelForm):
 
     class Meta:

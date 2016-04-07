@@ -197,6 +197,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
         super(Member, self).save(*args, **kwargs)
 
+    def clean(self):
+        self.username = self.username.lower()
+
     def has_mystery_box(self):
         if not self.mystery_box_points:
             return False
@@ -240,6 +243,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
             user=self,
             badge=badge
         )
+
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=40, primary_key=True)
