@@ -62,7 +62,7 @@
 {% endblock %}
 {% block body %}
     <div class="row">
-        <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
             <form action="{% url 'core:submit_snippet' %}" method="post">
                 <div class="panel {% if snippet.is_starred %}panel-warning{% else %}panel-primary{% endif %}">
                     <div class="panel-heading">
