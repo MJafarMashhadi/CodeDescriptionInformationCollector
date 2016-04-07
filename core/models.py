@@ -320,7 +320,7 @@ class Comment(models.Model):
         if 'commit' not in kwargs or kwargs['commit']:
             if not self.skip:
                 if self.snippet.is_starred and self.user.comments.filter(comment__skip=False, comment__snippet__is_starred=True).count() == 2-1:
-                    self.user.earn_bagde('multiple_of_star_methods')
+                    self.user.earn_badge('multiple_of_star_methods')
                 elif self.snippet.score == 10 and self.user.comments.filter(comment__skip=False, comment__snippet__score=10).count() == 3-1:
                     self.user.earn_badge('multiple_of_10')
         super(Comment, self).save(*args, **kwargs)
