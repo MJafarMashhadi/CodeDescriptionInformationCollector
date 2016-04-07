@@ -208,7 +208,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return False
 
     def remove_mystery_box(self):
-        if not self.mystery_box_points:
+        if not self.mystery_box_points or len(self.mystery_box_points) == 0:
             return
         points = list(map(int, self.mystery_box_points.split(',')))
         for p in points:
