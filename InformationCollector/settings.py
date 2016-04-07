@@ -155,6 +155,15 @@ if not DEBUG:
                 'handlers': ['console'],
                 'propagate': False,
             },
+            'django': {
+                'handlers': ['console'],
+                'propagate': True,
+                'level': 'DEBUG',
+            },
+            'core': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
         },
     }
 
