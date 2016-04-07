@@ -183,44 +183,47 @@ def submit_snippet(request):
         return HttpResponseBadRequest()
 
     snippet = get_object_or_404(CodeSnippet, pk=request.POST.get('snippet', None))
-    is_double = snippet.n_comments < 3
     try:
-        comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
-    except Comment.DoesNotExist:
-        comment_form = CommentForm(data=request.POST)
+        is_double = snippet.n_comments < 3
+        try:
+            comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
+        except Comment.DoesNotExist:
+            comment_form = CommentForm(data=request.POST)
 
-    if 'skip' in request.POST:
-        if request.session.get('skips', 0) < MAX_SKIP:
-            Comment.objects.create(
-                snippet=snippet,
-                user=request.user,
-                skip=True
-            )
-            request.user.earn_xp(-1, 'Skipped {}'.format(snippet.name))
-            if 'skips' not in request.session:
-                request.session['skips'] = 0
-            request.session['skips'] += 1
+        if 'skip' in request.POST:
+            if request.session.get('skips', 0) < MAX_SKIP:
+                Comment.objects.create(
+                    snippet=snippet,
+                    user=request.user,
+                    skip=True
+                )
+                request.user.earn_xp(-1, 'Skipped {}'.format(snippet.name))
+                if 'skips' not in request.session:
+                    request.session['skips'] = 0
+                request.session['skips'] += 1
+                request.session['snippet_id'] = None
+
+                return redirect('core:random')
+            else:
+                return redirect('core:random')
+        elif comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.user = request.user
+            comment.snippet = snippet
+            comment.save()
+            request.session['skips'] = 0
+            if is_double:
+                request.user.earn_xp(2 * snippet.score,
+                                     'Summarized {} for the first time (Double score)'.format(snippet.name))
+            else:
+                request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
+
             request.session['snippet_id'] = None
-
-            return redirect('core:random')
+            return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
         else:
             return redirect('core:random')
-    elif comment_form.is_valid():
-        comment = comment_form.save(commit=False)
-        comment.user = request.user
-        comment.snippet = snippet
-        comment.save()
-        request.session['skips'] = 0
-        if is_double:
-            request.user.earn_xp(2 * snippet.score,
-                                 'Summarized {} for the first time (Double score)'.format(snippet.name))
-        else:
-            request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
-
-        request.session['snippet_id'] = None
-        return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
-    else:
-        return redirect('core:random')
+    except Exception as e:
+        print(e)
 
 
 @login_required
