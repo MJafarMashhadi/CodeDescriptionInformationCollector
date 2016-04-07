@@ -1,6 +1,8 @@
 {% if request.user.is_authenticated %}
     <div class="container-fluid">
+        {% if request.user.badges.count %}
         <div class="row">{% include 'panels/panel_badges.html' %}</div>
+        {% endif %}
         <div class="row">{% include 'panels/panel_good_snippets.html' %}</div>
         <div class="row">{% include 'panels/panel_few_commented_snippets.html' %}</div>
         <div class="row">{% include 'panels/panel_programming_languages.html' %}</div>
