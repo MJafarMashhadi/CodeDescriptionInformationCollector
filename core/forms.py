@@ -21,6 +21,9 @@ class RegistrationForm(UserCreationForm):
             'industry_experience': 'in months',
             'nickname': 'will be shown on your profile and in leader boards',
         }
+        labels = {
+            'experience': 'General programming experience'
+        }
 
 
 class ProgrammingLanguagesForm(forms.ModelForm):
@@ -50,6 +53,11 @@ class UserProfileForm(forms.ModelForm):
         help_texts = {
             'experience': 'in months',
             'industry_experience': 'in months',
+            'nickname': 'will be shown on your profile and in leader boards',
+
+        }
+        labels = {
+            'experience': 'General programming experience'
         }
 
 
