@@ -188,10 +188,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
                                                    [
                                                        random.randrange(self.LEVEL_RANGES[1][0],
                                                                         self.LEVEL_RANGES[1][1]),
-                                                       random.randrange(self.LEVEL_RANGES[3][0],
-                                                                        self.LEVEL_RANGES[3][1]),
-                                                       random.randrange(self.LEVEL_RANGES[5][0],
-                                                                        self.LEVEL_RANGES[5][1])
+                                                       random.randrange(self.LEVEL_RANGES[4][0],
+                                                                        self.LEVEL_RANGES[4][1]),
+                                                       random.randrange(self.LEVEL_RANGES[6][0],
+                                                                        self.LEVEL_RANGES[6][1])
                                                    ]
                                                    )))
 
@@ -230,6 +230,16 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
         self.save()
 
+    def earn_badge(self, badge_name):
+        try:
+            badge = Badge.objects.get(slug=badge_name)
+        except Badge.DoesNotExist:
+            return None
+
+        return EarnBadge.objects.get_or_create(
+            user=self,
+            badge=badge
+        )
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=40, primary_key=True)
@@ -277,17 +287,6 @@ class CodeSnippet(models.Model):
     @property
     def virgin(self):
         return not Comment.objects.filter(snippet=self, skip=False).exists()
-
-    def earn_badge(self, badge_name):
-        try:
-            badge = Badge.objects.get(slug=badge_name)
-        except Badge.DoesNotExist:
-            return None
-
-        return EarnBadge.objects.get_or_create(
-            user=self,
-            badge=badge
-        )
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.language.name)
