@@ -1,4 +1,8 @@
-<div class="">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span>Badges you have been collected</span>
+    </div>
+
     <ul class="badges">
     {% for badge in request.user.badges.all %}
         <li><img src="{{ badge.icon.url }}" width="40px" height="40px" alt="{{ badge.name }}"/></li>
