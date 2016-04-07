@@ -3,6 +3,35 @@
 
 {% block title %}Register{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
+
+    <script type="text/javascript">
+    $(function () {
+        var $proficiency = $('input[id$="-proficiency"]');
+        var $submit = $('button[type=submit]');
+        var $zero_alert = $('.zero-alert');
+        $zero_alert.hide();
+        $proficiency.on('change', function () {
+            var zero_count = 0;
+            $proficiency.each(function (_) {
+                if ($(this).val() == 0) {
+                    zero_count += 1;
+                    console.log('found a zero');
+                }
+            });
+            if (zero_count < $proficiency.length) {
+                $submit.removeClass('disabled');
+                $zero_alert.hide();
+            } else {
+                $submit.addClass('disabled');
+                $zero_alert.show();
+            }
+        })
+    });
+    </script>
+{% endblock %}
+
 {% block body %}
     <form method="post" action="{% url 'core:register' %}">
         {% csrf_token %}
@@ -47,7 +76,8 @@
         </div>
         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
             <div class="well">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <p class="bg-warning zero-alert">You should have experience in programming with at least one language.</p>
+                <button type="submit" class="btn btn-primary disabled">Register</button>
                 <span>Already have an account? <a href="{% url 'core:login' %}">Log in</a> here</span>
             </div>
         </div>
