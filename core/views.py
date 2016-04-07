@@ -408,8 +408,6 @@ def profile(request):
         'profile_form': form,
         'programming_languages_form': pls
     }
-    context.update(_get_sidebar_context(request))
-
     return render(request, 'auth/profile.html', context=context)
 
 

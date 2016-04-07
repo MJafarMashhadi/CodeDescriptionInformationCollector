@@ -18,7 +18,7 @@ class PLAdmin(admin.ModelAdmin):
 
 @admin.register(UserKnowsPL)
 class UserKnowsPLAdmin(admin.ModelAdmin):
-    list_display = ('user', 'language', 'proficiency')
+    list_display = ('user', 'language', 'proficiency', 'self_assessment')
 
 
 class KnowLanguageInline(admin.TabularInline):

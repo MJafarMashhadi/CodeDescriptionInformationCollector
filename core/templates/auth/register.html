@@ -28,13 +28,17 @@
                 </div>
                 <div class="panel-body">
                     <div class="programming languages container-fluid">
-                        {{ programming_languages.management_form }}
                         {% for form in programming_languages.forms %}
                             <div class="form-group">
                                 <p>Your months of experience in programming with <label>{{ form.language.value }}</label></p>
                                 {{ form.language }}
                                 {{ form.proficiency|bootstrap_inline }}
                             </div>
+                            <div class="form-group">
+                                <p>In range of <strong>1-5</strong> specify your proficiency in programming in <label>{{ form.language.value }}</label></p>
+                                {{ form.self_assessment|bootstrap_inline }}
+                            </div>
+                            <hr>
                         {% endfor %}
                     </div>
                 </div>

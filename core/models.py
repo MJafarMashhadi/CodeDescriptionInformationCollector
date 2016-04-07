@@ -256,6 +256,9 @@ class UserKnowsPL(models.Model):
     user = models.ForeignKey(Member)
     language = models.ForeignKey(ProgrammingLanguage)
     proficiency = models.PositiveIntegerField()
+    self_assessment = models.PositiveIntegerField(default=5, validators=[
+        validators.MinValueValidator(1), validators.MaxValueValidator(5)
+    ])
 
     def __str__(self):
         return self.language.name

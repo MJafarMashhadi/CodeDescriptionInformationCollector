@@ -29,12 +29,13 @@ class RegistrationForm(UserCreationForm):
 class ProgrammingLanguagesForm(forms.ModelForm):
     class Meta:
         model = UserKnowsPL
-        fields = ('language', 'proficiency')
+        fields = ('language', 'proficiency', 'self_assessment')
         widgets = {
             'language': forms.HiddenInput()
         }
         labels = {
-            'proficiency': 'Experience'
+            'proficiency': 'Experience',
+            'self_assessment': 'In range of <strong>1-5</strong> specify your proficiency in programming in this language',
         }
 
 ProgrammingLanguagesFormset = formset_factory(ProgrammingLanguagesForm, can_delete=False, extra=0)
