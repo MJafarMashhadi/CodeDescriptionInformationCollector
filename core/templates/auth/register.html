@@ -22,9 +22,11 @@
             });
             if (zero_count < $proficiency.length) {
                 $submit.removeClass('disabled');
+                $submit.attr("disabled", "disabled");
                 $zero_alert.hide();
             } else {
                 $submit.addClass('disabled');
+                $submit.removeAttr("disabled");
                 $zero_alert.show();
             }
         })
@@ -76,8 +78,8 @@
         </div>
         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
             <div class="well">
-                <p class="bg-warning zero-alert">You should have experience in programming with at least one language.</p>
-                <button type="submit" class="btn btn-primary disabled">Register</button>
+                <p class="bg-warning zero-alert" style="padding: 15px;">You should have experience in programming with at least one language.</p>
+                <button type="submit" class="btn btn-primary disabled" disabled="disabled">Register</button>
                 <span>Already have an account? <a href="{% url 'core:login' %}">Log in</a> here</span>
             </div>
         </div>
