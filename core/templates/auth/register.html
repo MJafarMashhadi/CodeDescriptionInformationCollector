@@ -11,8 +11,7 @@
         var $proficiency = $('input[id$="-proficiency"]');
         var $submit = $('button[type=submit]');
         var $zero_alert = $('.zero-alert');
-        $zero_alert.show();
-        $proficiency.on('change', function () {
+        var update_proficiency = function () {
             var zero_count = 0;
             $proficiency.each(function (_) {
                 if ($(this).val() == 0) {
@@ -29,7 +28,9 @@
                 $submit.removeAttr("disabled");
                 $zero_alert.show();
             }
-        })
+        };
+        $proficiency.on('change', update_proficiency);
+        update_proficiency();
     });
     </script>
 {% endblock %}
@@ -79,7 +80,7 @@
         <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
             <div class="well">
                 <p class="bg-warning zero-alert" style="padding: 15px;">You should have experience in programming with at least one language.</p>
-                <button type="submit" class="btn btn-primary disabled" disabled="disabled">Register</button>
+                <button type="submit" class="btn btn-primary">Register</button>
                 <span>Already have an account? <a href="{% url 'core:login' %}">Log in</a> here</span>
             </div>
         </div>
