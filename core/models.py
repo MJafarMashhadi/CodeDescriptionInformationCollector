@@ -127,7 +127,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         'Good job! Keep on',
         'Middle of the way',
         'Code squasher',
-        'Point warm',
+        'Point worm',
         'Proficient code summarizer',
         'Monster slayer'
     ]
