@@ -21,11 +21,11 @@
             });
             if (zero_count < $proficiency.length) {
                 $submit.removeClass('disabled');
-                $submit.attr("disabled", "disabled");
+                $submit.removeAttr('disabled');
                 $zero_alert.hide();
             } else {
                 $submit.addClass('disabled');
-                $submit.removeAttr("disabled");
+                $submit.attr("disabled", "disabled");
                 $zero_alert.show();
             }
         };
