@@ -15,6 +15,7 @@ from .models import Member, CodeSnippet, Comment, UserKnowsPL
 THRESHOLD = 5
 MAX_SKIP = 4
 
+
 def login(request):
     if request.user.is_authenticated():
         return redirect('core:home')
@@ -26,6 +27,7 @@ def login(request):
             if request.POST.get('remember', None):
                 request.session.set_expiry(0)
             auth_login(request, form.get_user())
+            form.get_user().set_mystery_boxes()
             return HttpResponseRedirect(redirect_url)
     else:
         form = ICAuthenticationForm()

@@ -182,23 +182,24 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return not Comment.objects.filter(user=self).exists()
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            import random
-            self.mystery_box_points = ','.join(list(map(str,
-                                                   [
-                                                       random.randrange(self.LEVEL_RANGES[1][0],
-                                                                        self.LEVEL_RANGES[1][1]),
-                                                       random.randrange(self.LEVEL_RANGES[4][0],
-                                                                        self.LEVEL_RANGES[4][1]),
-                                                       random.randrange(self.LEVEL_RANGES[6][0],
-                                                                        self.LEVEL_RANGES[6][1])
-                                                   ]
-                                                   )))
+        if not self.pk or (not self.mystery_box_points and not self.got_mystery_boxes):
+            self.set_mystery_boxes()
 
         super(Member, self).save(*args, **kwargs)
 
-    def clean(self):
-        self.username = self.username.lower()
+    def set_mystery_boxes(self):
+        import random
+        self.got_mystery_boxes = ''
+        self.mystery_box_points = ','.join(list(map(str,
+                                                    [
+                                                        random.randrange(self.LEVEL_RANGES[1][0],
+                                                                         self.LEVEL_RANGES[1][1]),
+                                                        random.randrange(self.LEVEL_RANGES[4][0],
+                                                                         self.LEVEL_RANGES[4][1]),
+                                                        random.randrange(self.LEVEL_RANGES[6][0],
+                                                                         self.LEVEL_RANGES[6][1])
+                                                    ]
+                                                    )))
 
     def has_mystery_box(self):
         if not self.mystery_box_points:
