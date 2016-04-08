@@ -11,7 +11,7 @@
         var $proficiency = $('input[id$="-proficiency"]');
         var $submit = $('button[type=submit]');
         var $zero_alert = $('.zero-alert');
-        $zero_alert.hide();
+        $zero_alert.show();
         $proficiency.on('change', function () {
             var zero_count = 0;
             $proficiency.each(function (_) {
