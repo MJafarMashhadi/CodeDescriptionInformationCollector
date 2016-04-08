@@ -75,7 +75,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        exclude = ('date_time', 'user', 'snippet', 'skip')
+        exclude = ('date_time', 'user', 'snippet', 'skip', 'test')
         widgets = {
             'comment': forms.Textarea({
                 'rows': 2,
