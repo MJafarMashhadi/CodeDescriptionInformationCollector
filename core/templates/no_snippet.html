@@ -6,7 +6,14 @@
     <div class="row">
         <div class="jumbotron">
             {% if finished %}
-                <p>Hurray, No more methods!</p>
+                <p class="h2">Hurray, No more methods!</p>
+                <p class="h3">Now that you have done summarizing all methods, please continue at </p>
+                <div class="clear">
+                <a class="btn btn-large btn-lg btn-warning" href="{% url 'core:evaluating' %}">Evaluating other users comments</a>
+                <div class="clear"></div>
+                <p class="h3">and</p>
+                <a class="btn btn-lg btn-danger" href="https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform?c=0&w=1&usp=mail_form_link" target="_blank">Filling out this survey about this website</a>
+                </div>
             {% else %}
                 <p>Sorry, we have no more methods{% if language %} in {{ language }}{% endif %}</p>
             {% endif %}
