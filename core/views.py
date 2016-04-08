@@ -1,7 +1,6 @@
 import random
 from django.core.exceptions import PermissionDenied
-from core.models import ProgrammingLanguage, Evaluate, XP
-from django.contrib.auth.forms import AuthenticationForm
+from core.models import ProgrammingLanguage, Evaluate
 from django.db.models import Count, Sum, Case, When, IntegerField, Q
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth import login as auth_login
@@ -10,19 +9,18 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404
-from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm
+from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm, ICAuthenticationForm
 from .models import Member, CodeSnippet, Comment, UserKnowsPL
 
 THRESHOLD = 5
 MAX_SKIP = 4
-
 
 def login(request):
     if request.user.is_authenticated():
         return redirect('core:home')
 
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = ICAuthenticationForm(data=request.POST)
         if form.is_valid():
             redirect_url = request.GET.get('next', reverse('core:home'))
             if request.POST.get('remember', None):
@@ -30,7 +28,7 @@ def login(request):
             auth_login(request, form.get_user())
             return HttpResponseRedirect(redirect_url)
     else:
-        form = AuthenticationForm()
+        form = ICAuthenticationForm()
 
     return render(request, 'auth/login.html', context={
         'login_form': form

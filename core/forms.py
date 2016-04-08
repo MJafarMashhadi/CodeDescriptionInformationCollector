@@ -3,9 +3,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms import formset_factory
 
 from .models import Member, Comment, UserKnowsPL, CodeSnippet
+from django.contrib.auth.forms import AuthenticationForm
 
 
-class RegistrationForm(UserCreationForm):
+class CleanUsernameMixin:
+    def clean_username(self):
+        if self.username is None:
+            return None
+        else:
+            return self.username.lower()
+
+
+class RegistrationForm(UserCreationForm, CleanUsernameMixin):
 
     class Meta:
         model = Member
@@ -41,7 +50,7 @@ class ProgrammingLanguagesForm(forms.ModelForm):
 ProgrammingLanguagesFormset = formset_factory(ProgrammingLanguagesForm, can_delete=False, extra=0)
 
 
-class UserProfileForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm, CleanUsernameMixin):
 
     class Meta:
         model = Member
@@ -79,3 +88,7 @@ class CodeSnippetSubmitForm(forms.ModelForm):
     class Meta:
         model = CodeSnippet
         exclude = ('date_time', 'approved', 'submitter', 'usersViewed', 'score', 'is_starred')
+
+
+class ICAuthenticationForm(AuthenticationForm, CleanUsernameMixin):
+    pass
