@@ -340,16 +340,20 @@ def evaluating_snippet(request, language, name):
                                                                                                  test=False,
                                                                                                  snippet=snippet).
                                exclude(
-        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).order_by('?')[:5])
-    if not request.user.test_comment or random.randint(1, 4) == 3 and evaluation_comments:
+        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).distinct().order_by('?')[:5])
+    if (not request.user.test_comment or random.randint(1, 4) == 3) and evaluation_comments:
         test_comment, is_new = Comment.objects.get_or_create(user=Member.objects.get(email="mmmdamin@gmail.com"),
                                                              test=True,
                                                              snippet=snippet,
-                                                             comment=random.choice([
-                                                                 u"test! i'm sure",
-                                                                 u"ممنون کد خوبی بود",
-                                                                 u"What the code!",
-                                                             ]))
+                                                             )
+        if is_new:
+            test_comment.comment = random.choice([
+                u"test! i'm sure",
+                u"ممنون کد خوبی بود",
+                u"What the code!",
+                u"I don't know exactly..."
+            ])
+            test_comment.save()
         evaluation_comments[0] = test_comment
         if not request.user.test_comment:
             request.user.test_comment = True
