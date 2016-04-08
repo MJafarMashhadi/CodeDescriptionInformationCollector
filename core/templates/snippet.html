@@ -130,7 +130,13 @@
         <div style="margin: 40px auto" align="center">
             <h1>You've got a mystery box!!</h1>
             <a class="btn btn-info">Click to see what is in it!!</a>
-            <h4 class="mystery-description hide">There is {% if mystery_box == 'nill' %}Nothing{% elif mystery_box == 'badge' %}a badge{% elif mystery_box == 'score' %}0.25 score{% elif mystery_box == 'xppoints' %}10XP points{% endif %} in it!</h4>
+            <h4 class="mystery-description hide">
+                {% if mystery_box == 'nill' %}
+                    It was empty :(
+                {% else %}
+                    There is {% if mystery_box == 'badge' %}a badge{% elif mystery_box == 'score' %}0.25 score{% elif mystery_box == 'xppoints' %}10XP points{% endif %} in it!
+                {% endif %}
+            </h4>
             <a class="btn btn-danger btn-raised mystery-description hide">Got it!</a>
         </div>
     </div>
