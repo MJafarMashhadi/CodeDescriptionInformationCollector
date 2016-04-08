@@ -342,7 +342,7 @@ def evaluating_snippet(request, language, name):
                                exclude(
         Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).order_by('?')[:5])
     if not request.user.test_comment or random.randint(1, 4) == 3 and evaluation_comments:
-        test_comment, is_new = Comment.objects.get_or_create(user=Member.objects.get(email="me@mjafar.me"),
+        test_comment, is_new = Comment.objects.get_or_create(user=Member.objects.get(email="mmmdamin@gmail.com"),
                                                              test=True,
                                                              snippet=snippet,
                                                              comment=random.choice([
