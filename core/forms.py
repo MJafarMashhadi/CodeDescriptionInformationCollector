@@ -8,10 +8,10 @@ from django.contrib.auth.forms import AuthenticationForm
 
 class CleanUsernameMixin:
     def clean_username(self):
-        if self.username is None:
+        if self.cleaned_data.get("username") is None:
             return None
         else:
-            return self.username.lower()
+            return self.cleaned_data.get("username").lower()
 
 
 class RegistrationForm(UserCreationForm, CleanUsernameMixin):
