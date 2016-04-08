@@ -1,3 +1,4 @@
+# coding=utf-8
 import random
 from django.core.exceptions import PermissionDenied
 from core.models import ProgrammingLanguage, Evaluate
@@ -312,7 +313,8 @@ def show_random_snippet(request):
 @login_required
 def evaluating(request):
     snippets = CodeSnippet.objects.all().annotate(
-        comment__count=Sum(Case(When(comment__skip=False, then=1), output_field=IntegerField()), distinct=True)).filter(
+        comment__count=Sum(Case(When(comment__skip=False, comment__test=False, then=1), output_field=IntegerField()),
+                           distinct=True)).filter(
         comment__count__gt=0).order_by('-comment__count')
 
     for snippet in snippets:
@@ -334,9 +336,24 @@ def evaluating(request):
 def evaluating_snippet(request, language, name):
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
-    evaluation_comments = Comment.objects.annotate(Count('evaluate', distinct=True)).filter(skip=False,
-                                                                                            snippet=snippet).exclude(
-        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).order_by('?')[:5]
+    evaluation_comments = list(Comment.objects.annotate(Count('evaluate', distinct=True)).filter(skip=False,
+                                                                                                 test=False,
+                                                                                                 snippet=snippet).
+                               exclude(
+        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).order_by('?')[:5])
+    if not request.user.test_comment or random.randint(1, 4) == 3 and evaluation_comments:
+        test_comment, is_new = Comment.objects.get_or_create(user=Member.objects.get(email="me@mjafar.me"),
+                                                             test=True,
+                                                             snippet=snippet,
+                                                             comment=random.choice([
+                                                                 u"test! i'm sure",
+                                                                 u"ممنون کد خوبی بود",
+                                                                 u"What the code!",
+                                                             ]))
+        evaluation_comments[0] = test_comment
+        if not request.user.test_comment:
+            request.user.test_comment = True
+            request.user.save()
 
     context = {
         'snippet': snippet,
@@ -348,7 +365,7 @@ def evaluating_snippet(request, language, name):
 @login_required
 def evaluating_comment(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
-    if request.user == comment.user:
+    if request.user == comment.user or comment.skip:
         raise PermissionDenied
     evaluate, is_new = Evaluate.objects.get_or_create(comment=comment, user=request.user)
     evaluate.agree = request.POST.get('agree') == "true"

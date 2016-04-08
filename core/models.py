@@ -79,6 +79,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
     mystery_box_points = models.CharField(max_length=11, blank=True, null=True)
     got_mystery_boxes = models.CharField(max_length=50, blank=True, null=True)
 
+    test_comment = models.BooleanField(default=False)
+
     objects = MemberManager()
 
     USERNAME_FIELD = 'username'
@@ -306,6 +308,8 @@ class Comment(models.Model):
     comment = models.TextField(null=True, blank=True)
     date_time = models.DateTimeField(auto_now_add=True)
     skip = models.BooleanField(default=False)
+    test = models.BooleanField(default=False)
+
 
     def __str__(self):
         return '{} comment on {}'.format(self.user.get_full_name(), self.snippet.name)
