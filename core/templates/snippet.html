@@ -155,7 +155,11 @@
                     <div class="panel-body">
                         {% if is_double %}<p class="snippet-comment-count"><span>DOUBLE SCORE!</span></p>{% endif %}
                         <p class="bg-info">
-                            You may get a minimum of <strong>{{ snippet_score }}xp points</strong> for summarizing this method!
+                            {% if snippet.score == snippet_score %}
+                            You will get <strong>{{ snippet.score }}xp points</strong> for summarizing this method.
+                            {% else %}
+                            You will get a minimum of <strong>{{ snippet.score }}xp points</strong> and a maximum <strong>{{ snippet_score }}xp points</strong> for summarizing this method!
+                            {% endif %}
                         </p>
                         <p><strong>Read the following code carefully:</strong></p>
 
