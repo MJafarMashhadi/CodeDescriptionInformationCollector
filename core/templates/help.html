@@ -24,7 +24,7 @@
                 <p>But it doesn't mean that if you reach to level 8 you are winner. This game is based on the scores which you and other players will receive.</p>
                 <p>Top 10 players in <a href="{% url 'core:leaderboard' %}">Global Leaderboard</a> and top 3 in <a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are winners.</p>
                 <p><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are defined based on the programming proficiency that players have.</p>
-                <h3>Game Menus></h3>
+                <h3>Game Menus</h3>
                 <h4>Summarization</h4>
                 <p>You can see random snippets or select methods directly. Each method has a score(5 or 10 depends on the method difficulty). You can also see the number of comments on each method.</p>
                 <p>Hint: Your summaries will be evaluated by others and may decrease your Points.</p>
@@ -38,25 +38,10 @@
                 <p>You can collect badges by submitting codes.</p>
                 <h4>Badges</h4>
                 <p>There are 18 badges that you can get along the game. By the end of the game based on your badges, you will be awarded.</p>
-                <h4>Mystry box</h4>
+                <h4>Mystery box</h4>
                 <p>You will receive random mystry box in different levels with random gifts such as 10xp, 0.25 extra mark, badge and empty.</p>
                 
-                <p>for more information you can see: <a href="http://www.aparat.com/v/nNQdb">How to play</a></p>
-                <p>here are some links:</p>
-                <ul>
-                    <li><a href="{% url 'core:home' %}">Home</a></li>
-                    <li><a href="{% url 'core:login' %}">Login</a></li>
-                    <li><a href="{% url 'core:register' %}">Register</a></li>
-                    <li><a href="{% url 'core:profile' %}">Edit profile</a></li>
-                    <li><a href="{% url 'core:user_profile' username=request.user.username %}">View your own profile</a></li>
-                    <li><a href="{% url 'core:user_profile' username='shr-badihi' %}">View profile of an specific user for example, 'shr-badihi'</a></li>
-                    <li><a href="{% url 'core:random' %}">Show a random snippet</a></li>
-                    <li><a href="{% url 'core:evaluating' %}">Evaluation mini game link</a></li>
-                    <li><a href="{% url 'core:leaderboard' %}">Global Leaderboard</a></li>
-                    <li><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a></li>
-                    <li><a href="{% url 'core:survey' %}">Website assessment survey</a></li>
-                    <li><a href="{% url 'core:help' %}">This help page</a></li>
-                </ul>
+                <p class="h5 text-info">for more information you can see: <a href="http://www.aparat.com/v/nNQdb">How to play</a></p>
             </div>
         </div>
     </div>
