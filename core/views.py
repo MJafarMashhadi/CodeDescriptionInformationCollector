@@ -447,7 +447,7 @@ def user_profile(request, username):
         'xp_points_history': xp_points_history,
     })
 
-
+@login_required
 def leader_board(request):
     local = request.GET.get('local', '0') == '1'
     qs = Member.objects.order_by('-score')
@@ -462,17 +462,17 @@ def leader_board(request):
         'local': local,
     })
 
-
+@login_required
 def survey(request):
     return HttpResponseRedirect('https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform')
 
-
+@login_required
 def dont_show_survey_again(request):
     request.user.filled_survey = True
     request.user.save()
 
     return HttpResponse(status=200)
 
-
+@login_required
 def help(request):
     return render(request, 'help.html')

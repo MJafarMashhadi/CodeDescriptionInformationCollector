@@ -83,9 +83,9 @@
     </style>
 </head>
 <body>
+{% if request.user.is_authenticated %}
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
-        {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
                 <li style="margin-top: 10px;">
                     <a style="padding: 0;" href="{% url 'core:user_profile' username=request.user.username %}">
@@ -106,9 +106,7 @@
                 {% endif %}
                 <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:help' %}" data-toggle="tooltip" data-placement="bottom" title="Help"><i class="fa fa-2x fa-question"></i></a></li>
             </ul>
-        {% endif %}
         <div class="nav navbar-nav navbar-right">
-        {% if request.user.is_authenticated %}
             <span style="margin-right: 30px" class="hide-sm hide-xs"><em>{{ request.user.level }}</em></span>
             <div style="display: inline-block; width: 300px; color: whitesmoke; vertical-align: middle">
                 <div class="progress">
@@ -120,10 +118,10 @@
             <div style="display: inline-block">
                 <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
             </div>
-        {% endif %}
         </div>
     </div>
 </nav>
+{% endif %}
 <div class="container">
     {% block body %}{% endblock %}
 </div>
