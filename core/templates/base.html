@@ -120,12 +120,6 @@
             <div style="display: inline-block">
                 <a href="{% url 'core:logout' %}" class="btn btn-danger">Logout</a>
             </div>
-        {% else %}
-{#            <div class="navbar-form">#}
-            <div>
-                <a href="{% url 'core:login' %}" class="btn btn-primary">Login</a> or
-                <a href="{% url 'core:register' %}" class="btn">Register</a>
-            </div>
         {% endif %}
         </div>
     </div>
