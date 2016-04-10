@@ -104,6 +104,7 @@
                 {% if request.user.is_staff %}
                     <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'admin:index' %}" data-toggle="tooltip" data-placement="bottom" title="Manage Site"><i class="fa fa-2x fa-tachometer"></i></a></li>
                 {% endif %}
+                <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:help' %}" data-toggle="tooltip" data-placement="bottom" title="Help"><i class="fa fa-2x fa-question"></i></a></li>
             </ul>
         {% endif %}
         <div class="nav navbar-nav navbar-right">
