@@ -2,45 +2,122 @@
 
 {% block title %}Help{% endblock %}
 
+{% block extra_css %}
+{{ block.super }}
+    <style>
+    #fa {
+        text-align: right;
+        direction: rtl;
+    }
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+    <script type="text/javascript">
+    $(function () {
+        $('#myTabs a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show');
+        });
+    });
+})
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="container-fluid">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#en" aria-controls="en" role="tab" data-toggle="tab">English</a></li>
+            <li role="presentation"><a href="#fa" aria-controls="fa" role="tab" data-toggle="tab">فارسی</a>
+            </li>
+        </ul>
         <div class="panel">
             <div class="panel-body">
-                <h1>Help</h1>
-                <h2>What is method summary?</h2>
-                <p>Method summary is a high level abstraction about what the method does. It doesn't include details.</p>
-                <h2>Game Description</h2>
-                <p>This game has only 8 levels as following:</p>
-                <ol>
-                    <li>Starting to see the light</li>
-                    <li>Taking your first steps</li>
-                    <li>Good job! Keep on.</li>
-                    <li>Middle of the way</li>
-                    <li>Code squasher</li>
-                    <li>Point worm</li>
-                    <li>Proficient code summarizer</li>
-                    <li>Monster slayer</li>
-                </ol>
-                <p>But it doesn't mean that if you reach to level 8 you are winner. This game is based on the scores which you and other players will receive.</p>
-                <p>Top 10 players in <a href="{% url 'core:leaderboard' %}">Global Leaderboard</a> and top 3 in <a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are winners.</p>
-                <p><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are defined based on the programming proficiency that players have.</p>
-                <h3>Game Menus</h3>
-                <h4>Summarization</h4>
-                <p>You can see random snippets or select methods directly. Each method has a score(5 or 10 depends on the method difficulty). You can also see the number of comments on each method.</p>
-                <p>Hint: Your summaries will be evaluated by others and may decrease your points.</p>
-                <h4>Evaluation</h4>
-                <p>You can evaluate other comments by give a positive or negative point.</p>
-                <p>Hint: Your evaluations are captured.</p>
-                <h4>Leaderboard</h4>
-                <p>You can see top 10 and top 3 in global and local leaderboard.</p>
-                <h4>Submit code</h4>
-                <p>This menu will be activated for you and you can submit your own code if you reach to level 4. If it is approved, you can see the method in the game.</p>
-                <p>You can collect badges by submitting codes.</p>
-                <h4>Badges</h4>
-                <p>There are 18 badges that you can get along the game. By the end of the game based on your badges, you will be awarded.</p>
-                <h4>Mystery box</h4>
-                <p>You will receive random mystry box in different levels with random gifts such as 10xp, 0.25 extra mark, badge and empty.</p>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="en">
 
+                    <h1>Help</h1>
+                    <h2>What is method summary?</h2>
+                    <p>Method summary is a high level abstraction about what the method does. It doesn't include details.</p>
+                    <h2>Game Description</h2>
+                    <p>This game has only 8 levels as following:</p>
+                    <ol>
+                        <li>Starting to see the light</li>
+                        <li>Taking your first steps</li>
+                        <li>Good job! Keep on.</li>
+                        <li>Middle of the way</li>
+                        <li>Code squasher</li>
+                        <li>Point worm</li>
+                        <li>Proficient code summarizer</li>
+                        <li>Monster slayer</li>
+                    </ol>
+                    <p>But it doesn't mean that if you reach to level 8 you are winner. This game is based on the scores which you and other players will receive.</p>
+                    <p>Top 10 players in <a href="{% url 'core:leaderboard' %}">Global Leaderboard</a> and top 3 in <a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are winners.</p>
+                    <p><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are defined based on the programming proficiency that players have.</p>
+                    <h3>Game Menus</h3>
+                    <h4>Summarization</h4>
+                    <p>You can see random snippets or select methods directly. Each method has a score(5 or 10 depends on the method difficulty). You can also see the number of comments on each method.</p>
+                    <p>Hint: Your summaries will be evaluated by others and may decrease your points.</p>
+                    <h4>Evaluation</h4>
+                    <p>You can evaluate other comments by give a positive or negative point.</p>
+                    <p>Hint: Your evaluations are captured.</p>
+                    <h4>Leaderboard</h4>
+                    <p>You can see top 10 and top 3 in global and local leaderboard.</p>
+                    <h4>Submit code</h4>
+                    <p>This menu will be activated for you and you can submit your own code if you reach to level 4. If it is approved, you can see the method in the game.</p>
+                    <p>You can collect badges by submitting codes.</p>
+                    <h4>Badges</h4>
+                    <p>There are 18 badges that you can get along the game. By the end of the game based on your badges, you will be awarded.</p>
+                    <h4>Mystery box</h4>
+                    <p>You will receive random mystry box in different levels with random gifts such as 10xp, 0.25 extra mark, badge and empty.</p>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="fa">
+                        <h1>راهنما</h1>
+                        <h2>خلاصه‌ی کد چیست؟</h2>
+                        <p>Method summary is a high level abstraction about what the method does. It doesn't include
+                            details.</p>
+                        <h2>Game Description</h2>
+                        <p>This game has only 8 levels as following:</p>
+                        <ol>
+                            <li>Starting to see the light</li>
+                            <li>Taking your first steps</li>
+                            <li>Good job! Keep on.</li>
+                            <li>Middle of the way</li>
+                            <li>Code squasher</li>
+                            <li>Point worm</li>
+                            <li>Proficient code summarizer</li>
+                            <li>Monster slayer</li>
+                        </ol>
+                        <p>But it doesn't mean that if you reach to level 8 you are winner. This game is based on the scores
+                            which you and other players will receive.</p>
+                        <p>Top 10 players in <a href="{% url 'core:leaderboard' %}">Global Leaderboard</a> and top 3 in <a
+                                href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are winners.</p>
+                        <p><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are defined based on the
+                            programming proficiency that players have.</p>
+                        <h3>Game Menus</h3>
+                        <h4>Summarization</h4>
+                        <p>You can see random snippets or select methods directly. Each method has a score(5 or 10 depends
+                            on the method difficulty). You can also see the number of comments on each method.</p>
+                        <p>Hint: Your summaries will be evaluated by others and may decrease your points.</p>
+                        <h4>Evaluation</h4>
+                        <p>You can evaluate other comments by give a positive or negative point.</p>
+                        <p>Hint: Your evaluations are captured.</p>
+                        <h4>Leaderboard</h4>
+                        <p>You can see top 10 and top 3 in global and local leaderboard.</p>
+                        <h4>Submit code</h4>
+                        <p>This menu will be activated for you and you can submit your own code if you reach to level 4. If
+                            it is approved, you can see the method in the game.</p>
+                        <p>You can collect badges by submitting codes.</p>
+                        <h4>Badges</h4>
+                        <p>There are 18 badges that you can get along the game. By the end of the game based on your badges,
+                            you will be awarded.</p>
+                        <h4>Mystery box</h4>
+                        <p>You will receive random mystry box in different levels with random gifts such as 10xp, 0.25 extra
+                            mark, badge and empty.</p>
+
+                    </div>
+                </div>
                 <div align="center">
                     <iframe src="http://www.aparat.com/video/video/embed/videohash/nNQdb/vt/frame" height="360" width="640" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" ></iframe>
                 </div>
