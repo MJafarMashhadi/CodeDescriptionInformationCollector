@@ -5,7 +5,7 @@
 
     <ul class="badges">
     {% for badge in request.user.badges.all %}
-        <li><a href="#" title="{{ badge.name }}" data-toggle="tooltip" data-placement="top"><img src="{{ badge.icon.url }}" width="40px" height="40px" alt="{{ badge.name }}" /></a></li>
+        <li><a href="{{ badge.icon.url }}" target="_blank" title="{{ badge.name }}" data-toggle="tooltip" data-placement="top"><img src="{{ badge.icon.url }}" width="40px" height="40px" alt="{{ badge.name }}" /></a></li>
     {% endfor %}
     </ul>
 </div>
