@@ -46,7 +46,11 @@ img.avatar {
                         <td>{{ user.level }}</td>
                     </tr>
                     <tr>
-                        <td></td>
+                        <th>Number of methods summarized</th>
+                        <td>{{ user.comments_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ user.current_level_range.1 }}</td>
                         <td>
                             <div style="display: inline-block; width: 100%;">
                                 <div class="progress">

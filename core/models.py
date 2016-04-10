@@ -185,6 +185,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def should_see_home(self):
         return not Comment.objects.filter(user=self).exists()
 
+    @property
+    def comments_count(self):
+        return Comment.objects.filter(user=self).exclude(skip=True).count()
+
     def save(self, *args, **kwargs):
         if not self.pk or (not self.mystery_box_points and not self.got_mystery_boxes):
             self.set_mystery_boxes()
