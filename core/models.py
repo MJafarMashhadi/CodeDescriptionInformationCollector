@@ -52,9 +52,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
                                 error_messages={
                                     'unique': _("A user with that username already exists."),
                                 })
-    email = models.EmailField(_('email address'), blank=True, primary_key=True)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    email = models.EmailField(_('email address'), blank=False, primary_key=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=False)
+    last_name = models.CharField(_('last name'), max_length=30, blank=False)
     nickname = models.CharField('Nickname', max_length=30, blank=True)
 
     academic_degree = models.CharField(max_length=1, choices=(('G', 'Graduate'), ('U', 'Undergraduate')))

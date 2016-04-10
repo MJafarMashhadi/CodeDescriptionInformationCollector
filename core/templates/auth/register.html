@@ -3,6 +3,16 @@
 
 {% block title %}Register{% endblock %}
 
+{% block extra_css %}
+{{ block.super }}
+<style>
+.required.control-label:after {
+  content:"*";
+  color:red;
+}
+</style>
+{% endblock %}
+
 {% block extra_js %}
 {{ block.super }}
 
@@ -31,6 +41,10 @@
         };
         $proficiency.on('change', update_proficiency);
         update_proficiency();
+
+        $('.required').each(function () {
+            $(this).parent().parent().children('label').addClass('required');
+        });
     });
     </script>
 {% endblock %}
