@@ -235,6 +235,14 @@ def submit_new_snippet(request):
             snippet.approved = False
             snippet.submitter = request.user
             snippet.save()
+            
+            count = CodeSnippet.objects.filter(submitter=request.user, approved=True).count()
+			if count == 1:
+				request.user.earn_badge('code_submitter')
+			elif count == 3:
+				request.user.earn_badge('code_submitter_2')
+			elif count == 4:
+				request.user.earn_badge('code_submitter_3')
 
             saved = True
     else:
