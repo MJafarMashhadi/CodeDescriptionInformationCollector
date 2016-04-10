@@ -206,7 +206,7 @@
                         
                         {% if request.user.level_int > 0 and not request.user.filled_survey %}
                             <p class="bg-warning" style="padding: 5px 20px">
-                                We would be grateful if you could fill out <a href="{% url 'core:survey' %}" target="_blank">this survey</a> about the website. <a href="#" class="btn btn-xs btn-danger dont-show">Don't show me again</a>
+                                We would be grateful if you could complete <a href="{% url 'core:survey' %}" target="_blank">this survey</a> about the website. <a href="#" class="btn btn-xs btn-danger dont-show">Don't show me again</a>
                             </p>
                         {% endif %}
                         <button type="submit" class="btn btn-primary">Submit</button>
