@@ -8,7 +8,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404, JsonResponse
+from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm, ICAuthenticationForm
 from .models import Member, CodeSnippet, Comment, UserKnowsPL
@@ -461,10 +461,14 @@ def leader_board(request):
 
 
 def survey(request):
+    return HttpResponseRedirect('https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform')
+
+
+def dont_show_survey_again(request):
     request.user.filled_survey = True
     request.user.save()
 
-    return HttpResponseRedirect('https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform')
+    return HttpResponse(status=200)
 
 
 def help(request):

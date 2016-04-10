@@ -38,7 +38,8 @@ class RegistrationForm(UserCreationForm, CleanUsernameMixin, CleanNicknameMixin)
             'nickname': 'will be shown on your profile and in leader boards',
         }
         labels = {
-            'experience': 'General programming experience'
+            'experience': 'General programming experience',
+            'student_number': 'Student ID',
         }
 
 
@@ -74,7 +75,8 @@ class UserProfileForm(forms.ModelForm, CleanUsernameMixin, CleanNicknameMixin):
 
         }
         labels = {
-            'experience': 'General programming experience'
+            'experience': 'General programming experience',
+            'student_number': 'Student ID',
         }
 
 

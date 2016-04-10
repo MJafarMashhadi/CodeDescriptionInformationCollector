@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^snippet/new$', 'core.views.submit_new_snippet', name='submit_code'),
     url(r'^leaderboard/$', 'core.views.leader_board', name='leaderboard'),
     url(r'^survey/$', 'core.views.survey', name='survey'),
+    url(r'^survey/dont_show$', 'core.views.dont_show_survey_again', name='dont_show'),
     url(r'^help/$', 'core.views.help', name='help'),
     url(r'^/?$', 'core.views.home', name='home'),
 ]

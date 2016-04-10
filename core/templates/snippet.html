@@ -114,6 +114,19 @@
                     .keyup(updateCounter)
                     .click(updateCounter);
 
+            $('a.dont-show').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '{% url 'core:dont_show' %}',
+                    method: 'post',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    }
+                }).done(function () {
+                    $(this).parents('p').fadeOut(400);
+                });
+            });
+
             {% if mystery_box %}
             $('.mystery-description').removeClass('hide').fadeOut(0);
             $('body').css('overflow-y', 'hidden');
@@ -192,8 +205,8 @@
                     <div class="panel-footer">
                         
                         {% if request.user.level_int > 0 and not request.user.filled_survey %}
-                            <p class="bg-warning" style="padding: 10px 20px">
-                                We would be so thankful if you take your time and fill out <a href="{% url 'core:survey' %}" target="_blank">this survey</a> about the website
+                            <p class="bg-warning" style="padding: 5px 20px">
+                                We would be so thankful if you take your time and fill out <a href="{% url 'core:survey' %}" target="_blank">this survey</a> about the website. <a href="#" class="btn btn-xs btn-danger dont-show">Don't show again</a>
                             </p>
                         {% endif %}
                         <button type="submit" class="btn btn-primary">Submit</button>
