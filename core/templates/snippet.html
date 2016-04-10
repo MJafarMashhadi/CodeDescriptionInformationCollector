@@ -73,6 +73,14 @@
 
             $wordCountWarning.hide();
 
+            function disableSubmit() {
+                $submit.addClass('disabled').attr('disabled', 'disabled');
+            }
+
+            function enableSubmit() {
+                $submit.removeClass('disabled').removeAttr('disabled');
+            }
+
             var updateCounter = function () {
                 var words = (function (val) {
                     if (val !== "") {
@@ -83,20 +91,20 @@
                 })($(this).val());
 
                 $wordCount.html(words);
-                if (words > 30) {
+                if (words > 30 || words < 3) {
                     $wordCountWrapper.removeClass('text-info').addClass('text-warning');
-                    if (words > 40) {
+                    if (words > 40 || words < 3) {
                         $wordCountWarning.show();
-                        $submit.addClass('disabled');
+                        disableSubmit();
                     } else {
                         $wordCountWarning.hide();
-                        $submit.removeClass('disabled');
+                        enableSubmit();
                     }
                 } else {
                     $wordCountWrapper.add('text-info').removeClass('text-warning');
                     $wordCountWarning.hide();
+                    enableSubmit();
                 }
-
             };
 
             $('textarea')
@@ -178,7 +186,7 @@
                         </p>
 
                         <p id="word_count_warning" class="text-danger">
-                            This seems to be a long summary!
+                            This seems to be too short or too long! Summaries should have at least 3 and at most 40 words.
                         </p>
                     </div>
                     <div class="panel-footer">

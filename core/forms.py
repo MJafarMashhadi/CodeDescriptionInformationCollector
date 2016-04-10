@@ -80,6 +80,10 @@ class UserProfileForm(forms.ModelForm, CleanUsernameMixin, CleanNicknameMixin):
 
 class CommentForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields['comment'].required = True
+
     class Meta:
         model = Comment
         exclude = ('date_time', 'user', 'snippet', 'skip', 'test')
