@@ -7,12 +7,36 @@
         <div class="panel">
             <div class="panel-body">
                 <h1>Help</h1>
-                <h2>Subsection 1</h2>
-                <p>Sub section description</p>
-                <h3>sub-Subsection</h3>
-                <p>Description</p>
-                <h4>sub-sub-Subsection</h4>
-                <p>Description</p>
+                <h2>What is method summary?</h2>
+                <p>Method summary is a high level abstraction about what the method does. It doesn't include details.</p>
+                <h2>Game Description</h2>
+                <p>This game has only 8 levels as following:</p>
+                <ul>
+                    <li><a>1-Starting to see the light</a></li>
+                    <li><a>2-Taking your first steps</a></li>
+                    <li><a>3-Good job! Keep on.</a></li>
+                    <li><a>4-Middle of the way</a></li>
+                    <li><a>5-Code squasher</a></li>
+                    <li><a>Point worm</a></li>
+                    <li><a>Proficient code summarizer</a></li>
+                    <li><a>Monster slayer</a></li>
+                </ul>
+                <p>But it doesn't mean that if you reach to level 8 you are winner. This game is based on the scores which you and other players will receive.</p>
+                <p>Top 10 players in <a href="{% url 'core:leaderboard' %}">Global Leaderboard</a> and top 3 in <a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are winners.</p>
+                <p><a href="{% url 'core:leaderboard' %}?local=1">Local Leaderboard</a> are defined based on the programming proficiency that players have.</p>
+                <h3>Game Menus></h3>
+                <h4>Summarization</h4>
+                <p>You can see random snippets or select methods directly. Each method has a score(5 or 10 depends on the method difficulty). You can also see the number of comments on each method.</p>
+                <p>Hint: Your summaries will be evaluated by others and may decrease your Points.</p>
+                <h4>Evaluation</h4>
+                <p>You can evaluate other comments by give a positive or negative.</p>
+                <p>Hint: Your evaluations are captured.</p>
+                <h4>Leaderboard</h4>
+                <p>You can see top 10 and top 3 in global and local leaderboard. .</p>
+                <h4>Submit code</h4>
+                <p>This menu will be activated for you and you can submit your own code if you reach to level 4. If it is approved, youa game</p>
+                <p>Hint: Your summaries will be evaluated by others and may decrease your Points.</p>
+                <h4>Summarization</h4>
                 <h2>Subsection 2</h2>
                 <p>here are some links:</p>
                 <ul>
