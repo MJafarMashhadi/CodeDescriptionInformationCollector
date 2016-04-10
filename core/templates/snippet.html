@@ -196,6 +196,11 @@
                             <input class="btn" type="submit" name="skip" value="Try another one"/>
                             ({{ available_skips }} skip{{ available_skips|pluralize }} left)
                         {% endif %}
+                        {% if request.user.level_int > 0 and not request.user.filled_survey %}
+                            <p class="bg-warning" style="padding: 10px 20px">
+                                We would be so thankful if you take your time and fill out <a href="{% url 'core:survey' %}" target="_blank">this survey</a> about the website
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             </form>

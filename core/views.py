@@ -450,3 +450,10 @@ def leader_board(request):
         'items': items,
         'local': local,
     })
+
+
+def survey(request):
+    request.user.filled_survey = True
+    request.user.save()
+
+    return HttpResponseRedirect('https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform')

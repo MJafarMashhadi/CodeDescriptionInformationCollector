@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^evaluating/comment/(?P<comment_id>\d+)$', 'core.views.evaluating_comment', name='evaluating_comment'),
     url(r'^snippet/new$', 'core.views.submit_new_snippet', name='submit_code'),
     url(r'^leaderboard/$', 'core.views.leader_board', name='leaderboard'),
+    url(r'^survey/$', 'core.views.survey', name='survey'),
     url(r'^/?$', 'core.views.home', name='home'),
 ]

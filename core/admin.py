@@ -39,12 +39,12 @@ class MemberAdmin(admin.ModelAdmin):
         ('email', 'username', 'student_number'),
         'score',
         ('academic_degree', 'experience', 'industry_experience'),
-        ('is_active', 'is_staff', 'is_superuser'),
+        ('is_active', 'is_staff', 'is_superuser', 'filled_survey'),
         ('date_joined', 'last_login')
     )
     inlines = [KnowLanguageInline, EarnedBadgeInline]
-    readonly_fields = ['date_joined', 'last_login', 'score', 'email']
-    ordering = ['is_active', 'score', 'email']
+    readonly_fields = ['date_joined', 'last_login', 'score', 'email', 'filled_survey']
+    ordering = ['is_active', '-score', 'email']
 
 
 @admin.register(CodeSnippet)

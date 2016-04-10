@@ -74,6 +74,8 @@ class Member(AbstractBaseUser, PermissionsMixin):
 
     student_number = models.CharField(max_length=8, null=True, blank=True, validators=[validators.RegexValidator(r'(8[5-9]|9[0-4])[1-3][0-2][0-9]{4}')])
 
+    filled_survey = models.BooleanField(default=False)
+
     badges = models.ManyToManyField('Badge', through='EarnBadge')
 
     mystery_box_points = models.CharField(max_length=11, blank=True, null=True)
