@@ -14,8 +14,15 @@ class CleanUsernameMixin:
             return self.cleaned_data.get("username").lower()
 
 
-class RegistrationForm(UserCreationForm, CleanUsernameMixin):
+class CleanNicknameMixin:
+    def clean_nickname(self):
+        if self.cleaned_data.get("nickname") is None:
+            return None
+        else:
+            return self.cleaned_data.get("nickname").strip()
 
+
+class RegistrationForm(UserCreationForm, CleanUsernameMixin, CleanNicknameMixin):
     class Meta:
         model = Member
         fields = (
@@ -50,7 +57,7 @@ class ProgrammingLanguagesForm(forms.ModelForm):
 ProgrammingLanguagesFormset = formset_factory(ProgrammingLanguagesForm, can_delete=False, extra=0)
 
 
-class UserProfileForm(forms.ModelForm, CleanUsernameMixin):
+class UserProfileForm(forms.ModelForm, CleanUsernameMixin, CleanNicknameMixin):
 
     class Meta:
         model = Member
