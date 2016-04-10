@@ -269,18 +269,16 @@ def show_random_snippet(request):
             pass
     try:
         if not snippet:
-            choose_random = True
             if not Comment.objects.filter(skip=False, test=False, user=request.user).count() < 2:
-                available_snippets = request.user.get_commentable_snippets_query_set().order_by('score').all()
-                choose_random = False
+                snippet = request.user.get_commentable_snippets_query_set().order_by('score').all()[0]
             else:
                 available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()
-            better_snippets = list(filter(lambda snippet: snippet.n_comments < THRESHOLD, available_snippets))
+                better_snippets = list(filter(lambda snippet: snippet.n_comments < THRESHOLD, available_snippets))
 
-            if len(better_snippets) == 0:
-                better_snippets = available_snippets
+                if len(better_snippets) == 0:
+                    better_snippets = available_snippets
+                snippet = random.choice(better_snippets) 
 
-            snippet = random.choice(better_snippets) if choose_random else better_snippets[0]
             request.session['snippet_id'] = snippet.pk
 
     except Exception as e:
