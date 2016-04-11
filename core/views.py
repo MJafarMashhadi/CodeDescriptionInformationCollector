@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponseBadRequest, Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm, ICAuthenticationForm
+from .forms import RegistrationForm, CommentForm, UserProfileForm, ProgrammingLanguagesFormset, CodeSnippetSubmitForm, \
+    ICAuthenticationForm
 from .models import Member, CodeSnippet, Comment, UserKnowsPL
 
 THRESHOLD = 5
@@ -223,6 +224,7 @@ def submit_snippet(request):
     else:
         return redirect('core:random')
 
+
 @login_required
 def submit_new_snippet(request):
     if not request.user.can_submit_code():
@@ -235,7 +237,7 @@ def submit_new_snippet(request):
             snippet.approved = False
             snippet.submitter = request.user
             snippet.save()
-            
+
             count = CodeSnippet.objects.filter(submitter=request.user).count()
             if count == 1:
                 request.user.earn_badge('code_submitter')
@@ -277,7 +279,7 @@ def show_random_snippet(request):
 
                 if len(better_snippets) == 0:
                     better_snippets = available_snippets
-                snippet = random.choice(better_snippets) 
+                snippet = random.choice(better_snippets)
 
             request.session['snippet_id'] = snippet.pk
 
@@ -347,11 +349,13 @@ def evaluating(request):
 def evaluating_snippet(request, language, name):
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
-    evaluation_comments = list(Comment.objects.annotate(Count('evaluate', distinct=True)).filter(skip=False,
-                                                                                                 test=False,
-                                                                                                 snippet=snippet).
-                               exclude(
-        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).distinct().order_by('?')[:5])
+    evaluation_comments = list(set(list(Comment.objects.annotate(Count('evaluate', distinct=True))
+                                        .filter(skip=False,
+                                                test=False,
+                                                snippet=snippet).
+                                        exclude(
+        Q(user=request.user) | Q(evaluate__user=request.user) | Q(evaluate__count__gt=5)).distinct()
+                                        .order_by('?')[:5])))
     if (not request.user.test_comment or random.randint(1, 4) == 3) and evaluation_comments:
         test_comment, is_new = Comment.objects.get_or_create(user=Member.objects.get(email="mmmdamin@gmail.com"),
                                                              test=True,
@@ -447,6 +451,7 @@ def user_profile(request, username):
         'xp_points_history': xp_points_history,
     })
 
+
 @login_required
 def leader_board(request):
     local = request.GET.get('local', '0') == '1'
@@ -462,9 +467,11 @@ def leader_board(request):
         'local': local,
     })
 
+
 @login_required
 def survey(request):
     return HttpResponseRedirect('https://docs.google.com/forms/d/11B3NPz4QOT-ooEsLg7hBP4Xf7ocefDES2dwZlANiC0g/viewform')
+
 
 @login_required
 def dont_show_survey_again(request):
@@ -472,6 +479,7 @@ def dont_show_survey_again(request):
     request.user.save()
 
     return HttpResponse(status=200)
+
 
 @login_required
 def help(request):
