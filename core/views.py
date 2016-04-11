@@ -29,7 +29,6 @@ def login(request):
             if request.POST.get('remember', None):
                 request.session.set_expiry(0)
             auth_login(request, form.get_user())
-            form.get_user().set_mystery_boxes()
             return HttpResponseRedirect(redirect_url)
     else:
         form = ICAuthenticationForm()
@@ -290,11 +289,8 @@ def show_random_snippet(request):
         return render(request, 'no_snippet.html', context=context)
     else:
         if request.user.has_mystery_box():
-            prizes = ['nill', 'badge', 'score', 'xppoints']
-            for p in prizes:
-                if request.user.got_mystery_box_before(p):
-                    prizes.remove(p)
-            prize = random.choice(prizes)
+            prizes = filter(lambda p: not request.user.got_mystery_box_before(p), ['nill', 'badge', 'score', 'xppoints'])
+            prize = random.choice(list(prizes))
             {
                 'nill': lambda: None,
                 'badge': lambda: request.user.earn_badge('comp_eng'),
