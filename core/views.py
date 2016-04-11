@@ -269,7 +269,7 @@ def show_random_snippet(request):
             pass
     try:
         if not snippet:
-            if not Comment.objects.filter(skip=False, test=False, user=request.user).count() < 2:
+            if Comment.objects.filter(skip=False, test=False, user=request.user).count() < 2:
                 snippet = request.user.get_commentable_snippets_query_set().order_by('score').all()[0]
             else:
                 available_snippets = request.user.get_commentable_snippets_query_set().order_by('-date_time').all()
