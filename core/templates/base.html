@@ -61,7 +61,7 @@
             if ($timer && $timer.length) {
                 console.log('count down :)');
                 $timer.countdown('2016/4/19 23:59:59', function(event) {
-                    $(this).html(event.strftime('%D days %H:%M:%S'));
+                    $(this).html(event.strftime('Time left: %D days %H:%M:%S'));
                 });
             }
             $('[data-toggle="tooltip"]').tooltip();
