@@ -148,7 +148,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return len(self.LEVEL_RANGES)
 
     def can_submit_code(self):
-        return self.level_int >= 4 or self.is_staff or self.is_superuser
+        return self.level_int >= 4-1 or self.is_staff or self.is_superuser
 
     @property
     def level(self):
