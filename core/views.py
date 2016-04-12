@@ -322,6 +322,10 @@ def show_random_snippet(request):
 
 @login_required
 def evaluating(request):
+    if Comment.objects.filter(user=request.user, skip=False, test=False).count() < 10:
+        return render(request, 'evaluating_snippet.html', context={
+            'must_comment': True,
+        })
     snippets = CodeSnippet.objects.all().annotate(
         comment__count=Sum(Case(When(comment__skip=False, comment__test=False, then=1), output_field=IntegerField()),
                            distinct=True)).filter(
@@ -336,6 +340,7 @@ def evaluating(request):
     snippets = sorted(snippets, key=lambda x: x.real_comment_count, reverse=True)[:5]
 
     context = {
+        'must_comment': False,
         'snippets': snippets
     }
 
@@ -344,11 +349,6 @@ def evaluating(request):
 
 @login_required
 def evaluating_snippet(request, language, name):
-    if Comment.objects.filter(user=request.user, skip=False, test=False).count() < 10:
-        return render(request, 'evaluating_snippet.html', context={
-            'must_comment': True,
-        })
-
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
     evaluation_comments = list(set(list(Comment.objects.annotate(Count('evaluate', distinct=True))
@@ -377,7 +377,6 @@ def evaluating_snippet(request, language, name):
             request.user.save()
 
     context = {
-        'must_comment': False,
         'snippet': snippet,
         'evaluation_comments': evaluation_comments
     }
