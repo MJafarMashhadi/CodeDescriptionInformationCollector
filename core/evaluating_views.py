@@ -13,7 +13,7 @@ from .models import Member, CodeSnippet, Comment
 @login_required
 def evaluating(request):
     if Comment.objects.filter(user=request.user, skip=False, test=False).count() < 10:
-        return render(request, 'evaluating_snippet.html', context={
+        return render(request, 'evaluating.html', context={
             'must_comment': True,
         })
     snippets = CodeSnippet.objects.all().annotate(
