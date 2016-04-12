@@ -11,28 +11,34 @@
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span>Methods for evaluating comments</span>
-                </div>
+                {% if must_comment %}
+                    <div class="panel-heading">
+                        <span>You must comment on at least 10 comment</span>
+                    </div>
+                {% else %}
+                    <div class="panel-heading">
+                        <span>Methods for evaluating comments</span>
+                    </div>
 
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Unevaluated Comments</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for snippet in snippets %}
+                    <table class="table table-hover">
+                        <thead>
                         <tr>
-                            <td><span class="label label-info">{{ snippet.language.name }}</span><a
-                                    href="{% url 'core:evaluating_snippet' language=snippet.language.name name=snippet.name %}">{{ snippet.name }}</a>
-                            </td>
-                            <td>{{ snippet.real_comment_count }}</td>
+                            <th>Name</th>
+                            <th>Unevaluated Comments</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for snippet in snippets %}
+                            <tr>
+                                <td><span class="label label-info">{{ snippet.language.name }}</span><a
+                                        href="{% url 'core:evaluating_snippet' language=snippet.language.name name=snippet.name %}">{{ snippet.name }}</a>
+                                </td>
+                                <td>{{ snippet.real_comment_count }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -289,7 +289,8 @@ def show_random_snippet(request):
         return render(request, 'no_snippet.html', context=context)
     else:
         if request.user.has_mystery_box():
-            prizes = filter(lambda p: not request.user.got_mystery_box_before(p), ['nill', 'badge', 'score', 'xppoints'])
+            prizes = filter(lambda p: not request.user.got_mystery_box_before(p),
+                            ['nill', 'badge', 'score', 'xppoints'])
             prize = random.choice(list(prizes))
             {
                 'nill': lambda: None,
@@ -343,6 +344,11 @@ def evaluating(request):
 
 @login_required
 def evaluating_snippet(request, language, name):
+    if Comment.objects.filter(user=request.user, skip=False, test=False).count() < 10:
+        return render(request, 'evaluating_snippet.html', context={
+            'must_comment': True,
+        })
+
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
 
     evaluation_comments = list(set(list(Comment.objects.annotate(Count('evaluate', distinct=True))
@@ -371,6 +377,7 @@ def evaluating_snippet(request, language, name):
             request.user.save()
 
     context = {
+        'must_comment': False,
         'snippet': snippet,
         'evaluation_comments': evaluation_comments
     }
