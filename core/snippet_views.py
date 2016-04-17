@@ -110,7 +110,7 @@ def submit_snippet(request):
         request.session['skips'] = 0
         if is_double:
             request.user.earn_xp(2 * snippet.score,
-                                 'Summarized {} for the first time (Double score)'.format(snippet.name))
+                                 'Summarized {} in the first 5 times (Double score)'.format(snippet.name))
         else:
             request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
 
