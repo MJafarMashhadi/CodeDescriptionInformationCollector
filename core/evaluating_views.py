@@ -58,7 +58,9 @@ def evaluating_snippet(request, language, name):
                 u"test! i'm sure",
                 u"ممنون کد خوبی بود",
                 u"What the code!",
-                u"I don't know exactly..."
+                u"I don't know exactly...",
+		u"It does something for sure",
+		u"Give me some badges :-D",
             ])
             test_comment.save()
         evaluation_comments[0] = test_comment

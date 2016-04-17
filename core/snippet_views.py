@@ -13,6 +13,7 @@ from .views import _get_sidebar_context
 
 THRESHOLD = 5
 MAX_SKIP = 4
+from core.views import DOUBLE_LIMIT
 
 
 @login_required
@@ -33,7 +34,7 @@ def snippet_lang(request, language):
     except Comment.DoesNotExist:
         comment_form = CommentForm()
 
-    is_double = snippet.n_comments < 3
+    is_double = snippet.n_comments < DOUBLE_LIMIT
     context = {
         'snippet': snippet,
         'is_double': is_double,
@@ -59,7 +60,7 @@ def show_snippet(request, language, name):
     except Comment.DoesNotExist:
         comment_form = CommentForm()
 
-    is_double = snippet.n_comments < 3
+    is_double = snippet.n_comments < DOUBLE_LIMIT
     context = {
         'snippet': snippet,
         'is_double': is_double,
@@ -79,7 +80,7 @@ def submit_snippet(request):
         return HttpResponseBadRequest()
 
     snippet = get_object_or_404(CodeSnippet, pk=request.POST.get('snippet', None))
-    is_double = snippet.n_comments < 3
+    is_double = snippet.n_comments < DOUBLE_LIMIT
     try:
         comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
     except Comment.DoesNotExist:
@@ -166,7 +167,7 @@ def show_random_snippet(request):
         else:
             mystery_box = None
 
-        is_double = snippet.n_comments < 3
+        is_double = snippet.n_comments < DOUBLE_LIMIT
         context = {
             'snippet': snippet,
             'is_double': is_double,

@@ -7,6 +7,7 @@ from django.shortcuts import render
 
 from .models import Member
 
+DOUBLE_LIMIT = 5
 
 def _get_sidebar_context(request):
     if request.user.is_authenticated():
@@ -19,15 +20,14 @@ def _get_sidebar_context(request):
 
         if len(fewest_summaries) == 0:
             fewest_summaries = request.user.get_commentable_snippets_query_set().order_by('?').all()[:10]
-
         double_high_scores = request.user.get_commentable_snippets_query_set() \
                                  .annotate(n_comments_a=Count('usersViewed')) \
-                                 .filter(n_comments_a__lt=3) \
+                                 .filter(n_comments_a__lt=DOUBLE_LIMIT) \
                                  .order_by('-score') \
                                  .all()[:10]
         normal_high_scores = request.user.get_commentable_snippets_query_set() \
                                  .annotate(n_comments_a=Count('usersViewed')) \
-                                 .filter(n_comments_a__gte=3) \
+                                 .filter(n_comments_a__gte=DOUBLE_LIMIT) \
                                  .order_by('-score') \
                                  .all()[:10]
 
