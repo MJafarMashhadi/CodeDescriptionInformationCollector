@@ -40,6 +40,8 @@ def evaluating(request):
 @login_required
 def evaluating_snippet(request, language, name):
     snippet = get_object_or_404(CodeSnippet, name=name, language__name=language)
+    if not Comment.objects.filter(snippet=snippet, user=request.user).exists():
+        raise PermissionDenied
 
     evaluation_comments = list(set(list(Comment.objects.annotate(Count('evaluate', distinct=True))
                                         .filter(skip=False,
@@ -59,8 +61,8 @@ def evaluating_snippet(request, language, name):
                 u"ممنون کد خوبی بود",
                 u"What the code!",
                 u"I don't know exactly...",
-		u"It does something for sure",
-		u"Give me some badges :-D",
+                u"It does something for sure",
+                u"Give me some badges :-D",
             ])
             test_comment.save()
         evaluation_comments[0] = test_comment
