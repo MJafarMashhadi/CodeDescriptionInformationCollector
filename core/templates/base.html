@@ -117,9 +117,8 @@
                 <li><a class="timer"></a></li>
             </ul>
         <div class="nav navbar-nav navbar-right">
-            <span style="margin-right: 30px" class="hide-sm hide-xs"><em>{{ request.user.level }}</em>
-            {% if request.user.current_level_range.1 == 'inf' %}{{ request.user.score }} XP Points{% endif %}
-            </span>
+            <span style="margin-right: 30px" class="hide-sm hide-xs"><em>{{ request.user.level }}</em></span>
+            {% if request.user.current_level_range.1 > 100000 %}<span style="margin-right: 30px" class="hide-sm hide-xs"><small>{{ request.user.score }} XP</small></span>{% endif %}
             <div style="display: inline-block; width: 300px; color: whitesmoke; vertical-align: middle">
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" aria-valuenow="{{ request.user.score }}" aria-valuemin="{{ request.user.current_level_range.0 }}" aria-valuemax="{{ request.user.current_level_range.1 }}"></div>
