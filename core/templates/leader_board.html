@@ -2,80 +2,105 @@
 {% load gravatar humanize %}
 
 {% block extra_css %}
-{{ block.super }}
-<style>
-.name-level {
- vertical-align: middle; display: inline-block
-}
-.name-level p {
-    margin: 1px 0;
-}
-a:hover {
-    text-decoration: none !important;
-}
+    {{ block.super }}
+    <style>
+        .name-level {
+            vertical-align: middle;
+            display: inline-block
+        }
 
-</style>
+        .name-level p {
+            margin: 1px 0;
+        }
+
+        a:hover {
+            text-decoration: none !important;
+        }
+
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$(function() {
+    $('.container').removeClass('container');
+});
+</script>
 {% endblock %}
 
 {% block body %}
 
-<ul class="nav nav-tabs">
-    <li role="presentation"{% if not local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}">Global leaderboard</a></li>
-    <li role="presentation"{% if local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a></li>
-</ul>
+    <ul class="nav nav-tabs">
+        <li role="presentation"{% if not local %} class="active"{% endif %}>
+            <a href="{% url 'core:leaderboard' %}">Global leaderboard</a>
+        </li>
+        <li role="presentation"{% if local %} class="active"{% endif %}>
+            <a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a>
+        </li>
+    </ul>
     {% if not request.user.is_staff %}
-<div class="panel">
-    <div class="panel-body">
+        <div class="panel">
+        <div class="panel-body">
     {% endif %}
-        {% if local %}
-        <p class="alert alert-info">
-            Top 3 people that have almost the same amount of experience that you have.
-        </p>
-        {% endif %}
-        <div>
-            <table class="table table-hover table-striped">
-                <tr>
-                    <th>Nickname</th>
-                    {% if request.user.is_staff %}<th>Full Name</th>{% endif %}
-                    <th>Summarized Methods</th>
-                    <th>Evaluations</th>
-                    <th>Badges</th>
-                    <th>XP</th>
-                    {% if request.user.is_staff %}<th>Activity Period</th>{% endif %}
-                </tr>
-                {% for user in items %}
-                <tr{% if user == request.user %} class="warning row-warning"{% endif %}>
-                    <td>
-                        <a href="{% url 'core:user_profile' username=user.username %}">
-                            <img src="{% gravatar_url user.email 40 %}" style="border-radius: 50%;" />
-                            <div class="name-level">
-                                <p>{% if user.nickname %}{{ user.nickname }}{% else %}{{ user.username }}{% endif %}</p>
-                                <p class="text-muted">{{ user.level }}</p>
-                            </div>
-                        </a>
-                    </td>
-                    {% if request.user.is_staff %}<td valign="center">{{ user.get_full_name }}</td>{% endif %}
-                    <td valign="center">{{ user.comments_count }}</td>
-                    <td valign="center">{{ user.evaluations_count }}</td>
-                    <td valign="center">
-                        <ul class="badges">
-                            {% for badge in user.badges.all %}
-                                <li><a href="{{ badge.icon.url }}" target="_blank" title="{{ badge.name }}" data-toggle="tooltip" data-placement="top"><img src="{{ badge.icon.url }}" width="30px" height="30px" alt="{{ badge.name }}" /></a></li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td>{{ user.score }}</td>
-                    {% if request.user.is_staff %}<td valign="center">
-                    {{ user.get_first_comment_date }}<small class="text-muted">({{ user.get_first_comment_date|naturaltime }})</small> <br>to<br>
-                    {{ user.get_last_comment_date }}<small class="text-muted">({{ user.get_last_comment_date|naturaltime }})</small>
-                    </td>{% endif %}
-                </tr>
-                {% endfor %}
-            </table>
+{% if local %}
+    <p class="alert alert-info">
+        Top 3 people that have almost the same amount of experience that you have.
+    </p>
+{% endif %}
+<table class="table table-hover table-striped">
+    <tr>
+        <th>Nickname</th>
+        {% if request.user.is_staff %}
+            <th>Full Name</th>{% endif %}
+        <th>Summarized Methods</th>
+        <th>Evaluations</th>
+        <th>Badges</th>
+        <th>XP</th>
+        {% if request.user.is_staff %}
+            <th>Activity Period</th>{% endif %}
+    </tr>
+    {% for user in items %}
+        <tr{% if user == request.user %} class="warning row-warning"{% endif %}>
+            <td>
+                <a href="{% url 'core:user_profile' username=user.username %}">
+                    <img src="{% gravatar_url user.email 40 %}" style="border-radius: 50%;"/>
+                    <div class="name-level">
+                        <p>{% if user.nickname %}{{ user.nickname }}{% else %}{{ user.username }}{% endif %}</p>
+                        <p class="text-muted">{{ user.level }}</p>
+                    </div>
+                </a>
+            </td>
+            {% if request.user.is_staff %}
+                <td valign="center">{{ user.get_full_name }}</td>{% endif %}
+            <td valign="center">{{ user.comments_count }}</td>
+            <td valign="center">{{ user.evaluations_count }}</td>
+            <td valign="center">
+                <ul class="badges">
+                    {% for badge in user.badges.all %}
+                        <li>
+                            <a href="{{ badge.icon.url }}" target="_blank" title="{{ badge.name }}"
+                               data-toggle="tooltip" data-placement="top">
+                                <img src="{{ badge.icon.url }}" width="30px" height="30px" alt="{{ badge.name }}"/>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ user.score }}</td>
+            {% if request.user.is_staff %}
+                <td valign="center">
+                    {{ user.get_first_comment_date }}
+                    <small class="text-muted">({{ user.get_first_comment_date|naturaltime }})</small>
+                    <br>to<br>
+                    {{ user.get_last_comment_date }}
+                    <small class="text-muted">({{ user.get_last_comment_date|naturaltime }})</small>
+                </td>{% endif %}
+        </tr>
+    {% endfor %}
+</table>
 
-    {% if not request.user.is_staff %}
-        </div>
+{% if not request.user.is_staff %}
     </div>
-    {% endif %}
-</div>
+    </div>
+{% endif %}
 {% endblock %}
