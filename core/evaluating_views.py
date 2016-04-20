@@ -18,7 +18,7 @@ def evaluating(request):
         })
     snippets = CodeSnippet.objects.all().annotate(
         comment__count=Sum(Case(When(comment__skip=False, comment__test=False, then=1), output_field=IntegerField()),
-                           distinct=True)).filter(
+                           distinct=True)).filter(comment__user=request.user).filter(
         comment__count__gt=2).order_by('-comment__count')
 
     for snippet in snippets:
