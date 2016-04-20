@@ -20,9 +20,8 @@ from core.views import DOUBLE_LIMIT
 def snippet_lang(request, language):
     order = int(request.GET.get('order', 1)) - 1
     try:
-        snippet = CodeSnippet.objects.filter(language__name__iexact=language, approved=True).order_by(
-            '-date_time').all()[
-                  order:1 + order].get()
+        snippet = CodeSnippet.objects.filter(language__name__iexact=language, approved=True).order_by('-date_time')\
+            .all()[order:1 + order].get()
     except CodeSnippet.DoesNotExist:
         context = {'language': language, 'finished': order != 1}
         context.update(_get_sidebar_context(request))
@@ -83,8 +82,10 @@ def submit_snippet(request):
     is_double = snippet.n_comments < DOUBLE_LIMIT
     try:
         comment_form = CommentForm(data=request.POST, instance=Comment.objects.get(snippet=snippet, user=request.user))
+        is_new = False
     except Comment.DoesNotExist:
         comment_form = CommentForm(data=request.POST)
+        is_new = True
 
     if 'skip' in request.POST:
         if request.session.get('skips', 0) < MAX_SKIP:
@@ -107,15 +108,16 @@ def submit_snippet(request):
         comment.user = request.user
         comment.snippet = snippet
         comment.save()
-        request.session['skips'] = 0
-        if is_double:
-            request.user.earn_xp(2 * snippet.score,
-                                 'Summarized {} in the first 5 times (Double score)'.format(snippet.name))
-        else:
-            request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
+        if is_new:
+            request.session['skips'] = 0
+            if is_double:
+                request.user.earn_xp(2 * snippet.score,
+                                     'Summarized {} in the first 5 times (Double score)'.format(snippet.name))
+            else:
+                request.user.earn_xp(snippet.score, 'Summarized {}'.format(snippet.name))
 
-        request.session['snippet_id'] = None
-        return HttpResponseRedirect(request.POST.get('next', reverse('core:home')))
+            request.session['snippet_id'] = None
+        return HttpResponseRedirect(request.POST.get('next', reverse('core:random')))
     else:
         return redirect('core:random')
 
