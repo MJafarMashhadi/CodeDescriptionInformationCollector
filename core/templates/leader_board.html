@@ -21,11 +21,13 @@
 {% endblock %}
 
 {% block extra_js %}
+    {% if request.user.is_staff %}
 <script type="text/javascript">
 $(function() {
     $('.container').removeClass('container');
 });
 </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
