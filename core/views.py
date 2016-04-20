@@ -64,9 +64,15 @@ def leader_board(request):
     if local:
         exp = (request.user.experience / 6) * 6
         qs = qs.filter(experience__range=(exp, exp + 6))
-        items = qs[:3].all()
+        if request.user.is_staff:
+            items = qs.all()
+        else:
+            items = qs[:3].all()
     else:
-        items = qs[:10].all()
+        if request.user.is_staff:
+            items = qs.all()
+        else:
+            items = qs[:10].all()
     return render(request, 'leader_board.html', context={
         'items': items,
         'local': local,

@@ -189,6 +189,10 @@ class Member(AbstractBaseUser, PermissionsMixin):
     def comments_count(self):
         return Comment.objects.filter(user=self).exclude(skip=True).count()
 
+    @property
+    def evaluations_count(self):
+        return Evaluate.objects.filter(user=self).count()
+
     def save(self, *args, **kwargs):
         if not self.pk or (not self.mystery_box_points and not self.got_mystery_boxes):
             self.set_mystery_boxes()
