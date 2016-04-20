@@ -23,8 +23,10 @@ a:hover {
     <li role="presentation"{% if not local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}">Global leaderboard</a></li>
     <li role="presentation"{% if local %} class="active"{% endif %}><a href="{% url 'core:leaderboard' %}?local=1">Local leaderboard</a></li>
 </ul>
+    {% if not request.user.is_staff %}
 <div class="panel">
     <div class="panel-body">
+    {% endif %}
         {% if local %}
         <p class="alert alert-info">
             Top 3 people that have almost the same amount of experience that you have.
@@ -71,7 +73,9 @@ a:hover {
                 {% endfor %}
             </table>
 
+    {% if not request.user.is_staff %}
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
