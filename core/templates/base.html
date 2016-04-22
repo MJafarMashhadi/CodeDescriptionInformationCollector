@@ -136,5 +136,8 @@
 <div class="container">
     {% block body %}{% endblock %}
 </div>
+{% if request.user.is_staff %}
+<div class="container"><p class="text-muted">Generated at {% now "jS F Y H:i" %}</p></div>
+{% endif %}
 </body>
 </html>
