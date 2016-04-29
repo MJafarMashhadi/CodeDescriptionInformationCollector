@@ -51,6 +51,7 @@ $(function() {
 {% endif %}
 <table class="table table-hover table-striped">
     <tr>
+        <th>#</th>
         <th>Nickname</th>
         {% if request.user.is_staff %}
             <th>Full Name</th>{% endif %}
@@ -63,6 +64,7 @@ $(function() {
     </tr>
     {% for user in items %}
         <tr{% if user == request.user %} class="warning row-warning"{% endif %}>
+            <td>{{ forloop.counter }}</td>
             <td>
                 <a href="{% url 'core:user_profile' username=user.username %}">
                     <img src="{% gravatar_url user.email 40 %}" style="border-radius: 50%;"/>
