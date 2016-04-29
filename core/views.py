@@ -72,7 +72,7 @@ def leader_board(request):
         if request.user.is_staff:
             items = qs.all()
         else:
-            items = qs[:10].all()
+            items = qs[:10*2].all()
     return render(request, 'leader_board.html', context={
         'items': items,
         'local': local,
