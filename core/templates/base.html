@@ -56,7 +56,7 @@
                 }
             });
 
-
+{#
             var $timer = $('.timer');
             if ($timer && $timer.length) {
                 console.log('count down :)');
@@ -64,6 +64,7 @@
                     $(this).html(event.strftime('Time left: %D days %H:%M:%S'));
                 });
             }
+#}
             $('[data-toggle="tooltip"]').tooltip();
             $.material.init();
         });
@@ -114,7 +115,7 @@
                     <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'admin:index' %}" data-toggle="tooltip" data-placement="bottom" title="Manage Site"><i class="fa fa-2x fa-tachometer"></i></a></li>
                 {% endif %}
                 <li><a style="padding-top: 13px; padding-bottom: 13px;" href="{% url 'core:help' %}" data-toggle="tooltip" data-placement="bottom" title="Help"><i class="fa fa-2x fa-question"></i></a></li>
-                <li><a class="timer"></a></li>
+{#                <li><a class="timer"></a></li> #}
             </ul>
         <div class="nav navbar-nav navbar-right">
             <span style="margin-right: 30px" class="hide-sm hide-xs"><em>{{ request.user.level }}</em></span>
