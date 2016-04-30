@@ -63,7 +63,7 @@ def leader_board(request):
     qs = Member.objects.order_by('-score')
     if local:
         exp = int(request.user.experience / 6) * 6
-        qs = qs.filter(experience__range=(exp, exp + 6))
+        qs = qs.filter(experience__range=(exp, exp + 5))
         if request.user.is_staff:
             items = qs.all()
         else:
