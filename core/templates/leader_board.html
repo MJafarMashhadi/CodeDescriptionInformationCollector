@@ -60,7 +60,9 @@ $(function() {
         <th>Badges</th>
         <th>XP</th>
         {% if request.user.is_staff %}
-            <th>Activity Period</th>{% endif %}
+            <th>Activity Period</th>
+            <th>experience</th>
+        {% endif %}
     </tr>
     {% for user in items %}
         <tr{% if user == request.user %} class="warning row-warning"{% endif %}>
@@ -98,7 +100,9 @@ $(function() {
                     <br>to<br>
                     {{ user.get_last_comment_date }}
                     <small class="text-muted">({{ user.get_last_comment_date|naturaltime }})</small>
-                </td>{% endif %}
+                </td>
+                <td>{{ user.experience }}</td>
+            {% endif %}
         </tr>
     {% endfor %}
 </table>
