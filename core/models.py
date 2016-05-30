@@ -115,14 +115,14 @@ class Member(AbstractBaseUser, PermissionsMixin):
         )
 
     LEVEL_RANGES = (
-        (float('-inf'), 20),
-        (20, 60),
-        (60, 100),
-        (100, 150),
-        (150, 200),
-        (200, 260),
-        (260, 320),
-        (320, float('inf')),
+        (float('-inf'), 80),
+        (80, 200),
+        (200, 400),
+        (400, 550),
+        (550, 800),
+        (800, 1200),
+        (1200, 2000),
+        (2000, float('inf')),
     )
 
     LEVELS = [
